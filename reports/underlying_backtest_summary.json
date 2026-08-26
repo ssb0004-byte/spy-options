@@ -1,0 +1,42 @@
+{
+  "data_window": {
+    "start": "2026-07-16 13:30:00+00:00",
+    "end": "2026-08-25 19:59:00+00:00",
+    "n_sessions_total": 29,
+    "n_sessions_warmup_excluded": 14,
+    "n_sessions_eligible_for_signals": 15
+  },
+  "n_checkpoint_opportunities_eligible": 180,
+  "n_trades": 2,
+  "trade_stats_pct_return": {
+    "n_trades": 2,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "expectancy": -0.0014449294509264116,
+    "avg_win": NaN,
+    "avg_loss": -0.0014449294509264116,
+    "payoff_ratio": 0.0,
+    "gross_profit": 0.0,
+    "gross_loss": -0.0028898589018528232,
+    "net_pnl": -0.0028898589018528232
+  },
+  "long_trades": 1,
+  "short_trades": 1,
+  "avg_holding_minutes": 60.0,
+  "exit_reason_counts": {
+    "signal_exit": 2
+  },
+  "expectancy_bootstrap_ci_95pct": {
+    "point": -0.0014449294509264116,
+    "lo": NaN,
+    "hi": NaN,
+    "note": "n<5 trades: bootstrap CI is not meaningful (returned as NaN by design); see BACKTEST_REPORT.md"
+  },
+  "not_computed": {
+    "annualized_return_vol_sharpe_sortino_maxdd": "requires a multi-month+ equity curve; n_trades too small / window too short",
+    "calendar_year_results": "only one partial calendar year (2026) is represented, and only a 6-week slice of it",
+    "rolling_6m_12m_performance": "window is 6 weeks; no rolling window is computable",
+    "vix_regime_breakdown": "VIX data was not pulled for this run \u2014 with n_trades=2 a regime breakdown would not be informative; skipped rather than fabricated",
+    "monthly_and_dte_breakdowns": "not computed for options layer; see OPTION_BACKTEST_REPORT.md (BLOCKED BY DATA)"
+  }
+}

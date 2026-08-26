@@ -1,0 +1,89 @@
+{
+  "n_underlying_trades_available": 2,
+  "results": [
+    {
+      "policy_name": "1DTE_delta055_PRIMARY",
+      "fill_model": "optimistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "1DTE_delta055_PRIMARY",
+      "fill_model": "realistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "1DTE_delta055_PRIMARY",
+      "fill_model": "conservative",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "0DTE_delta055",
+      "fill_model": "optimistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "0DTE_delta055",
+      "fill_model": "realistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "0DTE_delta055",
+      "fill_model": "conservative",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "1DTE_delta065",
+      "fill_model": "optimistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "1DTE_delta065",
+      "fill_model": "realistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "1DTE_delta065",
+      "fill_model": "conservative",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "2DTE_delta055",
+      "fill_model": "optimistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "2DTE_delta055",
+      "fill_model": "realistic",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    },
+    {
+      "policy_name": "2DTE_delta055",
+      "fill_model": "conservative",
+      "reason": "no_institutional_options_data_provider_reachable",
+      "detail": "requested SPY option chain as of 2026-08-13 14:00:00+00:00 (expiration=None); no historical option quote source is configured or reachable in this environment. See DATA_AUDIT.md.",
+      "n_underlying_trades_attempted": 0
+    }
+  ]
+}
