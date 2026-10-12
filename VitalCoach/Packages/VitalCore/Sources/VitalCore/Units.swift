@@ -139,7 +139,7 @@ public struct DoseQuantity: Codable, Sendable, Equatable, Hashable {
         "\(DoseQuantity.format(amount)) \(unit.displayName)"
     }
 
-    static func format(_ d: Decimal) -> String {
+    public static func format(_ d: Decimal) -> String {
         var value = d
         var rounded = Decimal()
         NSDecimalRound(&rounded, &value, 4, .plain)

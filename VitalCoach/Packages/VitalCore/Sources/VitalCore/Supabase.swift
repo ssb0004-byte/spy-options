@@ -11,13 +11,25 @@ public struct SupabaseConfig: Sendable, Equatable {
 
     public init(url: URL, anonKey: String) { self.url = url; self.anonKey = anonKey }
 
-    /// Reads `SUPABASE_URL` / `SUPABASE_ANON_KEY` from an Info.plist-style dictionary.
+    /// Reads `SUPABASE_HOST` (e.g. "abcd1234.supabase.co") or `SUPABASE_URL` and
+    /// `SUPABASE_ANON_KEY` from an Info.plist-style dictionary. A bare host is preferred because
+    /// `.xcconfig` files treat `//` as a comment, silently truncating "https://…" values.
     /// Returns nil when unset or still containing placeholder values.
     public static func from(info: [String: Any]) -> SupabaseConfig? {
-        guard let rawURL = (info["SUPABASE_URL"] as? String)?.trimmingCharacters(in: .whitespaces),
-              let key = (info["SUPABASE_ANON_KEY"] as? String)?.trimmingCharacters(in: .whitespaces),
-              !rawURL.isEmpty, !key.isEmpty, !rawURL.contains("YOUR_"), !key.contains("YOUR_"),
-              let url = URL(string: rawURL), url.scheme == "https" else { return nil }
+        func clean(_ key: String) -> String? {
+            guard let v = (info[key] as? String)?.trimmingCharacters(in: .whitespaces), !v.isEmpty,
+                  !v.contains("YOUR_"), !v.hasPrefix("$(") else { return nil }
+            return v
+        }
+        guard let key = clean("SUPABASE_ANON_KEY") else { return nil }
+        let raw: String
+        if let host = clean("SUPABASE_HOST") {
+            guard !host.contains("/"), !host.contains(":") else { return nil }
+            raw = "https://\(host)"
+        } else if let url = clean("SUPABASE_URL") {
+            raw = url
+        } else { return nil }
+        guard let url = URL(string: raw), url.scheme == "https", url.host != nil else { return nil }
         return SupabaseConfig(url: url, anonKey: key)
     }
 }

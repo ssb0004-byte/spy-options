@@ -241,3 +241,38 @@ public enum DoseLog {
         return a
     }
 }
+
+/// Combines substances and regimens into the user's routine.
+public enum RoutinePlanner {
+    /// Planned doses for all *active* substances in the local-date range.
+    /// Paused/planned/completed/discontinued/deleted substances produce no planned doses.
+    public static func planned(substances: [UserSubstance], regimens: [SubstanceRegimen], from: LocalDate, to: LocalDate,
+                               deviceTimeZone: TimeZone) -> [PlannedDose] {
+        let active = Set(substances.filter { $0.status == .active && !$0.isDeleted }.map(\.id))
+        return regimens
+            .filter { active.contains($0.userSubstanceId) && !$0.isDeleted }
+            .flatMap { ScheduleGenerator.plannedDoses(for: $0, from: from, to: to, deviceTimeZone: deviceTimeZone) }
+            .sorted { $0.scheduledAt < $1.scheduledAt }
+    }
+
+    /// The regimen in effect for a substance on a given day (latest start wins).
+    public static func currentRegimen(for substanceId: UUID, regimens: [SubstanceRegimen], on day: LocalDate) -> SubstanceRegimen? {
+        regimens.filter { $0.userSubstanceId == substanceId && $0.isActive(on: day) }.max { $0.startDate < $1.startDate }
+            ?? regimens.filter { $0.userSubstanceId == substanceId && !$0.isDeleted && $0.startDate > day }.min { $0.startDate < $1.startDate }
+    }
+
+    /// Regimen history for a substance, newest first.
+    public static func history(for substanceId: UUID, regimens: [SubstanceRegimen]) -> [SubstanceRegimen] {
+        regimens.filter { $0.userSubstanceId == substanceId && !$0.isDeleted }.sorted { $0.startDate > $1.startDate }
+    }
+
+    /// Creates the record for a one-tap / notification log. Never invoked automatically.
+    public static func log(_ action: AdministrationAction, planned p: PlannedDose, userId: UUID, at now: Date, timeZone: TimeZone,
+                           takenAt: Date? = nil, dose: DoseQuantity? = nil, note: String? = nil, supersedes: UUID? = nil) -> ActualAdministration {
+        ActualAdministration(userId: userId, userSubstanceId: p.userSubstanceId, regimenId: p.regimenId, occurrenceKey: p.occurrenceKey,
+                             scheduledFor: p.scheduledAt, action: action,
+                             takenAt: action == .taken ? (takenAt ?? now) : nil,
+                             dose: action == .taken ? (dose ?? p.dose) : nil, route: action == .taken ? p.route : nil,
+                             note: note, supersedesId: supersedes, timeZoneIdentifier: timeZone.identifier, recordedAt: now)
+    }
+}

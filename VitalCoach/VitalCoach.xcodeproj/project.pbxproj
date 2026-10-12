@@ -1,0 +1,529 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0E4CD5F70C87FAAAE9CD0B0F /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478A1C8A0F0FAB7526190360 /* HealthKitService.swift */; };
+		25B68E1E60DFB08C3E1F53C7 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CF64B37A9007ABF65B48E2 /* AppModel.swift */; };
+		2E913FD6A6B7FCABBD49CF5E /* VitalCore in Frameworks */ = {isa = PBXBuildFile; productRef = 55C7480F1710E931F4B7B562 /* VitalCore */; };
+		3FF6875D92595A2E85E1F2B5 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E01F5ACC4AA68E59A05D7D /* SignInView.swift */; };
+		643E00A600C3D16E69B7C7A8 /* VitalCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2393B4094610CE4C573C4E85 /* VitalCore */; };
+		6F2E0C28A2A84785B3DAACF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB6D40A52226CC4C46CC524E /* Assets.xcassets */; };
+		7670941BBD74328C593AEDDC /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */; };
+		7F86729395F73A885C2BC6B0 /* VitalCoachApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */; };
+		80AB1F5D4FEB747F76ED165F /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8CC002A4B7E5F791904458 /* DesignSystem.swift */; };
+		8B2710BD32893C9C8BFFD6E9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3C1BD570409275858AAB4242 /* PrivacyInfo.xcprivacy */; };
+		9C8946BE85737C46BC571EBC /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171905C2C02FCABDFF22D8ED /* HealthKit.framework */; };
+		B90B1CFF07924A05FF5E16A0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C986707F351BD5FFFAB30F14 /* Persistence.swift */; };
+		BBD41CC17530661DA2260DED /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CB71975999622357411D03 /* SettingsView.swift */; };
+		BC1D2910D1D3A30A4B626A7B /* SubstanceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3A432700738C064EC44E4D /* SubstanceDetailView.swift */; };
+		C3A816B39BF37EA9468E9F7F /* DoseLogSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB010309C4AC84FD61E68993 /* DoseLogSheet.swift */; };
+		C40C5243FED1D4B237A42B38 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADC5BD23DE78016C4493C67 /* NotificationService.swift */; };
+		C64D4B1BA38CE4D524EA9A1E /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A98F83A26C9A9E93DA3236 /* CheckInView.swift */; };
+		CAE02AFB57CC95C4CE53BE20 /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B851BDC553135DF6682EBC73 /* CoachView.swift */; };
+		D1626636BF49C7DDE0AB9A11 /* SwiftDataRecordStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5B9FC0B8BE75FB007B9F02 /* SwiftDataRecordStoreTests.swift */; };
+		DE322349421CD56FAE630BD5 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336DA8B3C4946602E4C892B /* TrendsView.swift */; };
+		E82E19ECD71116AC810CD37B /* RoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BFBA74ED70B2378D208348 /* RoutineView.swift */; };
+		FC87B0A04C7F7245DD973AB3 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A47B07C7B476412F92E306C /* HomeView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1041BE691605AF136ED5642E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 799086971F4E23562A7394B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2D513AFF4C41BCB2A75AAF0;
+			remoteInfo = VitalCoach;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		03E1D3C9FD98ACF677F930AA /* VitalCoach.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VitalCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalCoachApp.swift; sourceTree = "<group>"; };
+		171905C2C02FCABDFF22D8ED /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		290E9775FCA3E82FF2A8D01A /* VitalCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VitalCore; path = Packages/VitalCore; sourceTree = SOURCE_ROOT; };
+		3C1BD570409275858AAB4242 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		478A1C8A0F0FAB7526190360 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		6ADC5BD23DE78016C4493C67 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		76CF64B37A9007ABF65B48E2 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		8A5B9FC0B8BE75FB007B9F02 /* SwiftDataRecordStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataRecordStoreTests.swift; sourceTree = "<group>"; };
+		8C8CC002A4B7E5F791904458 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		9792A6A7D881DD5EF370222D /* VitalCoachTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitalCoachTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A47B07C7B476412F92E306C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A336DA8B3C4946602E4C892B /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
+		B1CB71975999622357411D03 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B1E01F5ACC4AA68E59A05D7D /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		B3A98F83A26C9A9E93DA3236 /* CheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInView.swift; sourceTree = "<group>"; };
+		B851BDC553135DF6682EBC73 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
+		BB010309C4AC84FD61E68993 /* DoseLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoseLogSheet.swift; sourceTree = "<group>"; };
+		BD3A432700738C064EC44E4D /* SubstanceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstanceDetailView.swift; sourceTree = "<group>"; };
+		C986707F351BD5FFFAB30F14 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		CA4BA4D999B1D16171174D6C /* VitalCoach.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitalCoach.entitlements; sourceTree = "<group>"; };
+		DB6D40A52226CC4C46CC524E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F0BFBA74ED70B2378D208348 /* RoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineView.swift; sourceTree = "<group>"; };
+		F53888C0B362D474A59281B7 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
+		F6359E117E849CA7C972C24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5C227688B8CD2C04A4C2CE46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				643E00A600C3D16E69B7C7A8 /* VitalCore in Frameworks */,
+				9C8946BE85737C46BC571EBC /* HealthKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F8DEC64892AA856101B3E62 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E913FD6A6B7FCABBD49CF5E /* VitalCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0667E17AE21FC9D4F9055246 /* Coach */ = {
+			isa = PBXGroup;
+			children = (
+				B851BDC553135DF6682EBC73 /* CoachView.swift */,
+			);
+			path = Coach;
+			sourceTree = "<group>";
+		};
+		12757E7D74E666E7AAA8B535 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				9A47B07C7B476412F92E306C /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		1D0535F3BCE47F3FD6562DE0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				478A1C8A0F0FAB7526190360 /* HealthKitService.swift */,
+				6ADC5BD23DE78016C4493C67 /* NotificationService.swift */,
+				C986707F351BD5FFFAB30F14 /* Persistence.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		37391D9325A1F9C5DF41D08D /* CheckIn */ = {
+			isa = PBXGroup;
+			children = (
+				B3A98F83A26C9A9E93DA3236 /* CheckInView.swift */,
+			);
+			path = CheckIn;
+			sourceTree = "<group>";
+		};
+		3930726F73FDC5D8ECE7BD6A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DB6D40A52226CC4C46CC524E /* Assets.xcassets */,
+				F6359E117E849CA7C972C24F /* Info.plist */,
+				3C1BD570409275858AAB4242 /* PrivacyInfo.xcprivacy */,
+				CA4BA4D999B1D16171174D6C /* VitalCoach.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		46F4BD54EEA9D90FC029FDBF /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		4E17C399088A3D70DBB904B6 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				B1E01F5ACC4AA68E59A05D7D /* SignInView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		4F3E9AFE1B88D0455B1B1DBB /* Trends */ = {
+			isa = PBXGroup;
+			children = (
+				A336DA8B3C4946602E4C892B /* TrendsView.swift */,
+			);
+			path = Trends;
+			sourceTree = "<group>";
+		};
+		9FE2E6A1F40385637736094F = {
+			isa = PBXGroup;
+			children = (
+				A844A86944A4FD7B851C892F /* App */,
+				E8656F1187C61F7553B74853 /* AppTests */,
+				A14A33EC5A148C6601AE6552 /* Config */,
+				B9971CA92EBBB7A24CAFE4B5 /* Packages */,
+				C3D0D3AD4F1F731DA0AFC68E /* Frameworks */,
+				D89281DC5749FC46B42A0751 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A14A33EC5A148C6601AE6552 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				F53888C0B362D474A59281B7 /* App.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		A444DCBE8601A40282C455E6 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B1CB71975999622357411D03 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A844A86944A4FD7B851C892F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				76CF64B37A9007ABF65B48E2 /* AppModel.swift */,
+				0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */,
+				F6937FA0B88E16AC84F1D6A0 /* DesignSystem */,
+				FD4C7353EB0BEC600FB3B879 /* Features */,
+				3930726F73FDC5D8ECE7BD6A /* Resources */,
+				1D0535F3BCE47F3FD6562DE0 /* Services */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B66BFC76E475CB426F93AD69 /* Routine */ = {
+			isa = PBXGroup;
+			children = (
+				BB010309C4AC84FD61E68993 /* DoseLogSheet.swift */,
+				F0BFBA74ED70B2378D208348 /* RoutineView.swift */,
+				BD3A432700738C064EC44E4D /* SubstanceDetailView.swift */,
+			);
+			path = Routine;
+			sourceTree = "<group>";
+		};
+		B9971CA92EBBB7A24CAFE4B5 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				290E9775FCA3E82FF2A8D01A /* VitalCore */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		C3D0D3AD4F1F731DA0AFC68E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				171905C2C02FCABDFF22D8ED /* HealthKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D89281DC5749FC46B42A0751 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03E1D3C9FD98ACF677F930AA /* VitalCoach.app */,
+				9792A6A7D881DD5EF370222D /* VitalCoachTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E8656F1187C61F7553B74853 /* AppTests */ = {
+			isa = PBXGroup;
+			children = (
+				8A5B9FC0B8BE75FB007B9F02 /* SwiftDataRecordStoreTests.swift */,
+			);
+			path = AppTests;
+			sourceTree = "<group>";
+		};
+		F6937FA0B88E16AC84F1D6A0 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				8C8CC002A4B7E5F791904458 /* DesignSystem.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		FD4C7353EB0BEC600FB3B879 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				4E17C399088A3D70DBB904B6 /* Auth */,
+				37391D9325A1F9C5DF41D08D /* CheckIn */,
+				0667E17AE21FC9D4F9055246 /* Coach */,
+				12757E7D74E666E7AAA8B535 /* Home */,
+				46F4BD54EEA9D90FC029FDBF /* Onboarding */,
+				B66BFC76E475CB426F93AD69 /* Routine */,
+				A444DCBE8601A40282C455E6 /* Settings */,
+				4F3E9AFE1B88D0455B1B1DBB /* Trends */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B00746B41B98551E6EBE6A94 /* VitalCoachTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DBBD7BAA5D298CC807D8F1E6 /* Build configuration list for PBXNativeTarget "VitalCoachTests" */;
+			buildPhases = (
+				69C2CE8B9F97098BE705E4D6 /* Sources */,
+				7F8DEC64892AA856101B3E62 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3008BA88466A200A5C6EF2B7 /* PBXTargetDependency */,
+			);
+			name = VitalCoachTests;
+			packageProductDependencies = (
+				55C7480F1710E931F4B7B562 /* VitalCore */,
+			);
+			productName = VitalCoachTests;
+			productReference = 9792A6A7D881DD5EF370222D /* VitalCoachTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C2D513AFF4C41BCB2A75AAF0 /* VitalCoach */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C637DDF44A9BB6F11C256AC6 /* Build configuration list for PBXNativeTarget "VitalCoach" */;
+			buildPhases = (
+				1552E735C0703A2E1064FC97 /* Sources */,
+				4EE39E9AE59581B61AC7C31C /* Resources */,
+				5C227688B8CD2C04A4C2CE46 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VitalCoach;
+			packageProductDependencies = (
+				2393B4094610CE4C573C4E85 /* VitalCore */,
+			);
+			productName = VitalCoach;
+			productReference = 03E1D3C9FD98ACF677F930AA /* VitalCoach.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		799086971F4E23562A7394B8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C2D513AFF4C41BCB2A75AAF0 = {
+						DevelopmentTeam = "$(VC_DEVELOPMENT_TEAM)";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 3CC2167FB7E7218D66C4EAAB /* Build configuration list for PBXProject "VitalCoach" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9FE2E6A1F40385637736094F;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8BF53E7EBEA1FB5A740BDB29 /* XCLocalSwiftPackageReference "Packages/VitalCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C2D513AFF4C41BCB2A75AAF0 /* VitalCoach */,
+				B00746B41B98551E6EBE6A94 /* VitalCoachTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4EE39E9AE59581B61AC7C31C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F2E0C28A2A84785B3DAACF6 /* Assets.xcassets in Resources */,
+				8B2710BD32893C9C8BFFD6E9 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1552E735C0703A2E1064FC97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				25B68E1E60DFB08C3E1F53C7 /* AppModel.swift in Sources */,
+				C64D4B1BA38CE4D524EA9A1E /* CheckInView.swift in Sources */,
+				CAE02AFB57CC95C4CE53BE20 /* CoachView.swift in Sources */,
+				80AB1F5D4FEB747F76ED165F /* DesignSystem.swift in Sources */,
+				C3A816B39BF37EA9468E9F7F /* DoseLogSheet.swift in Sources */,
+				0E4CD5F70C87FAAAE9CD0B0F /* HealthKitService.swift in Sources */,
+				FC87B0A04C7F7245DD973AB3 /* HomeView.swift in Sources */,
+				C40C5243FED1D4B237A42B38 /* NotificationService.swift in Sources */,
+				7670941BBD74328C593AEDDC /* OnboardingView.swift in Sources */,
+				B90B1CFF07924A05FF5E16A0 /* Persistence.swift in Sources */,
+				E82E19ECD71116AC810CD37B /* RoutineView.swift in Sources */,
+				BBD41CC17530661DA2260DED /* SettingsView.swift in Sources */,
+				3FF6875D92595A2E85E1F2B5 /* SignInView.swift in Sources */,
+				BC1D2910D1D3A30A4B626A7B /* SubstanceDetailView.swift in Sources */,
+				DE322349421CD56FAE630BD5 /* TrendsView.swift in Sources */,
+				7F86729395F73A885C2BC6B0 /* VitalCoachApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		69C2CE8B9F97098BE705E4D6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1626636BF49C7DDE0AB9A11 /* SwiftDataRecordStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3008BA88466A200A5C6EF2B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2D513AFF4C41BCB2A75AAF0 /* VitalCoach */;
+			targetProxy = 1041BE691605AF136ED5642E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DB996F356D85EED5D1FFD8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/VitalCoach.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(VC_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Resources/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(VC_BUNDLE_ID)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		3859CFE5BBC685D4CA6E8282 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(VC_BUNDLE_ID).tests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VitalCoach.app/VitalCoach";
+			};
+			name = Debug;
+		};
+		3BF530B5D73A49DA4848DD0C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F53888C0B362D474A59281B7 /* App.xcconfig */;
+			buildSettings = {
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4BAB64325C1AD237D8F2D0CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F53888C0B362D474A59281B7 /* App.xcconfig */;
+			buildSettings = {
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		7EB09E9331F7271C2E5E3FAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/VitalCoach.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(VC_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Resources/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(VC_BUNDLE_ID)";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		9157B5C6D39471C84DCD676B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(VC_BUNDLE_ID).tests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VitalCoach.app/VitalCoach";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3CC2167FB7E7218D66C4EAAB /* Build configuration list for PBXProject "VitalCoach" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BF530B5D73A49DA4848DD0C /* Debug */,
+				4BAB64325C1AD237D8F2D0CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C637DDF44A9BB6F11C256AC6 /* Build configuration list for PBXNativeTarget "VitalCoach" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EB09E9331F7271C2E5E3FAD /* Debug */,
+				1DB996F356D85EED5D1FFD8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DBBD7BAA5D298CC807D8F1E6 /* Build configuration list for PBXNativeTarget "VitalCoachTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3859CFE5BBC685D4CA6E8282 /* Debug */,
+				9157B5C6D39471C84DCD676B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		8BF53E7EBEA1FB5A740BDB29 /* XCLocalSwiftPackageReference "Packages/VitalCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/VitalCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2393B4094610CE4C573C4E85 /* VitalCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VitalCore;
+		};
+		55C7480F1710E931F4B7B562 /* VitalCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VitalCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 799086971F4E23562A7394B8 /* Project object */;
+}

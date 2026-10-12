@@ -1,0 +1,7 @@
+// Non-secret build settings. Personal values live in Secrets.xcconfig (git-ignored).
+VC_BUNDLE_ID = com.example.vitalcoach
+VC_DEVELOPMENT_TEAM =
+SUPABASE_HOST =
+SUPABASE_ANON_KEY =
+
+#include? "Secrets.xcconfig"

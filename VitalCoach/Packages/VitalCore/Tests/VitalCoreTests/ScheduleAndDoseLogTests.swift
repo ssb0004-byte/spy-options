@@ -204,3 +204,41 @@ struct DoseLogTests {
         #expect(DoseLog.adherence(planned: [], records: [], now: now).takenRateOfLogged == nil)
     }
 }
+
+@Suite("Routine planner")
+struct RoutinePlannerTests {
+    let user = UUID()
+
+    @Test func onlyActiveSubstancesProducePlannedDoses() {
+        let active = UserSubstance(userId: user, name: "A", category: .vitaminMineral, status: .active)
+        let paused = UserSubstance(userId: user, name: "B", category: .prescription, status: .paused)
+        let sched = RegimenSchedule(frequency: .daily, times: [LocalTime(hour: 8, minute: 0)])
+        let day = LocalDate(year: 2026, month: 5, day: 2)
+        let rA = SubstanceRegimen(userId: user, userSubstanceId: active.id, dose: DoseQuantity(amount: 1, unit: .capsule), route: .oral, schedule: sched, startDate: day)
+        let rB = SubstanceRegimen(userId: user, userSubstanceId: paused.id, dose: DoseQuantity(amount: 1, unit: .tablet), route: .oral, schedule: sched, startDate: day)
+        let p = RoutinePlanner.planned(substances: [active, paused], regimens: [rA, rB], from: day, to: day, deviceTimeZone: newYork)
+        #expect(p.map(\.userSubstanceId) == [active.id])
+    }
+
+    @Test func currentRegimenFollowsRevisions() {
+        let s = UUID()
+        let sched = RegimenSchedule(frequency: .daily, times: [LocalTime(hour: 8, minute: 0)])
+        let old = SubstanceRegimen(userId: user, userSubstanceId: s, dose: DoseQuantity(amount: 5, unit: .milligram), route: .oral, schedule: sched,
+                                   startDate: LocalDate(year: 2026, month: 1, day: 1), endDate: LocalDate(year: 2026, month: 1, day: 31))
+        let new = SubstanceRegimen(userId: user, userSubstanceId: s, dose: DoseQuantity(amount: 10, unit: .milligram), route: .oral, schedule: sched,
+                                   startDate: LocalDate(year: 2026, month: 2, day: 1))
+        #expect(RoutinePlanner.currentRegimen(for: s, regimens: [old, new], on: LocalDate(year: 2026, month: 1, day: 15))?.id == old.id)
+        #expect(RoutinePlanner.currentRegimen(for: s, regimens: [old, new], on: LocalDate(year: 2026, month: 3, day: 1))?.id == new.id)
+        #expect(RoutinePlanner.currentRegimen(for: s, regimens: [new], on: LocalDate(year: 2025, month: 12, day: 1))?.id == new.id) // planned future
+        #expect(RoutinePlanner.history(for: s, regimens: [old, new]).map(\.id) == [new.id, old.id])
+    }
+
+    @Test func loggingSkipCarriesNoDose() {
+        let r = regimen(user: user, schedule: RegimenSchedule(frequency: .daily, times: [LocalTime(hour: 8, minute: 0)]), start: LocalDate(year: 2026, month: 5, day: 1))
+        let p = ScheduleGenerator.plannedDoses(for: r, from: LocalDate(year: 2026, month: 5, day: 1), to: LocalDate(year: 2026, month: 5, day: 1), deviceTimeZone: newYork)[0]
+        let skip = RoutinePlanner.log(.skipped, planned: p, userId: user, at: p.scheduledAt, timeZone: newYork)
+        #expect(skip.dose == nil && skip.takenAt == nil && skip.occurrenceKey == p.occurrenceKey)
+        let take = RoutinePlanner.log(.taken, planned: p, userId: user, at: p.scheduledAt, timeZone: newYork)
+        #expect(take.dose == p.dose && take.takenAt == p.scheduledAt && take.timeZoneIdentifier == "America/New_York")
+    }
+}

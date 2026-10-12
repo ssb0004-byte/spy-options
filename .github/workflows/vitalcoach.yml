@@ -1,0 +1,48 @@
+name: VitalCoach
+
+on:
+  push:
+    paths: ["VitalCoach/**", ".github/workflows/vitalcoach.yml"]
+  pull_request:
+    paths: ["VitalCoach/**", ".github/workflows/vitalcoach.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: vitalcoach-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-and-database:
+    name: VitalCore tests + database (RLS) tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: VitalCore unit tests (Swift 6.1, Linux)
+        run: VitalCoach/scripts/swift-in-docker.sh test
+      - name: Supabase migrations, RLS and schema round-trip tests (local Postgres)
+        run: VitalCoach/supabase/tests/run.sh
+
+  ios-app:
+    name: iOS app build + tests (Simulator)
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show toolchain
+        run: xcodebuild -version && swift --version
+      - name: Build and test
+        working-directory: VitalCoach
+        run: |
+          DEST=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; print(next(v['udid'] for k,vs in d.items() if 'iOS' in k for v in vs if v['name'].startswith('iPhone')))")
+          set +e
+          xcodebuild test -project VitalCoach.xcodeproj -scheme VitalCoach -destination "id=$DEST" CODE_SIGNING_ALLOWED=NO > build.log 2>&1
+          status=$?
+          grep -E "error:|warning:|Test Suite .* (passed|failed)|Executed|✔ Test run|✘|\*\* (BUILD|TEST)" build.log | sort -u | head -300
+          exit $status
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log
+          path: VitalCoach/build.log
