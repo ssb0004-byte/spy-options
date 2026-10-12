@@ -1,0 +1,137 @@
+# Builds VitalCoach on a GitHub-hosted Mac, signs it with your Apple account (Xcode
+# cloud-managed signing via an App Store Connect API key) and uploads it to TestFlight.
+# No Mac and no certificate files needed. Setup: VitalCoach/docs/TESTFLIGHT.md
+#
+# Triggers (only on demand, because macOS runner minutes are expensive):
+#   - push a tag named vitalcoach-testflight-<anything>  (works from any branch), or
+#   - Actions tab → "VitalCoach TestFlight" → Run workflow (once this file is on the default branch).
+name: VitalCoach TestFlight
+
+on:
+  push:
+    tags: ["vitalcoach-testflight-*"]
+  workflow_dispatch:
+
+concurrency:
+  group: vitalcoach-testflight
+  cancel-in-progress: false
+
+jobs:
+  testflight:
+    name: Build, sign and upload to TestFlight
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APP_BUNDLE_ID: ${{ secrets.APP_BUNDLE_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+      # Optional and public by design (Row Level Security protects data). Leave unset to ship
+      # a build that runs in "this iPhone only" mode.
+      SUPABASE_HOST: ${{ vars.SUPABASE_HOST }}
+      SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+      BUILD_NUMBER: ${{ github.run_number }}
+    defaults:
+      run:
+        working-directory: VitalCoach
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required secrets
+        run: |
+          missing=()
+          for name in APPLE_TEAM_ID APP_BUNDLE_ID ASC_KEY_ID ASC_ISSUER_ID ASC_PRIVATE_KEY; do
+            [ -n "${!name}" ] || missing+=("$name")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing repository secrets: ${missing[*]}. See VitalCoach/docs/TESTFLIGHT.md (step 4)."
+            exit 1
+          fi
+          case "$ASC_PRIVATE_KEY" in
+            *"BEGIN PRIVATE KEY"*) ;;
+            *) echo "::error::ASC_PRIVATE_KEY must be the full text of the .p8 file, including the BEGIN/END PRIVATE KEY lines."; exit 1 ;;
+          esac
+          echo "All required secrets are present. Build number: $BUILD_NUMBER"
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Install API key
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s\n' "$ASC_PRIVATE_KEY" > "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
+          chmod 600 "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
+
+      - name: Archive (Release, signed)
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project VitalCoach.xcodeproj -scheme VitalCoach -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/VitalCoach.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            VC_DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            VC_BUNDLE_ID="$APP_BUNDLE_ID" \
+            CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            SUPABASE_HOST="$SUPABASE_HOST" \
+            SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+            2>&1 | tee "$RUNNER_TEMP/archive.log" | grep -E "error:|warning: .*(sign|provision|entitlement)|\*\* ARCHIVE" || true
+          test -d "$RUNNER_TEMP/VitalCoach.xcarchive" || { echo "::error::Archive failed — see the archive-log artifact."; exit 1; }
+
+      - name: Export and upload to App Store Connect
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>uploadSymbols</key><true/>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+            <key>testFlightInternalTestingOnly</key><true/>
+          </dict>
+          </plist>
+          EOF
+          set -o pipefail
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/VitalCoach.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            2>&1 | tee "$RUNNER_TEMP/export.log" | grep -E "error|Upload|uploaded|\*\* EXPORT" || true
+          grep -q "EXPORT SUCCEEDED" "$RUNNER_TEMP/export.log" || { echo "::error::Export/upload failed — see the export-log artifact."; exit 1; }
+
+      - name: Summary
+        run: |
+          {
+            echo "### Uploaded VitalCoach build $BUILD_NUMBER to App Store Connect"
+            echo ""
+            echo "Apple now processes the build (usually 5–30 minutes). You'll get an email, then it appears"
+            echo "in the TestFlight app on your iPhone (internal testing only — no Apple review needed)."
+            if [ -z "$SUPABASE_HOST" ]; then echo ""; echo "Backend not configured: the app runs in 'this iPhone only' mode."; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove API key
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testflight-logs
+          path: |
+            ${{ runner.temp }}/archive.log
+            ${{ runner.temp }}/export.log
+          if-no-files-found: ignore

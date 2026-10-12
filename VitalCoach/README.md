@@ -19,11 +19,14 @@ VitalCoach/
 │   └── tests/                RLS, behaviour and schema round-trip tests (run.sh)
 ├── Config/                   App.xcconfig + Secrets.example.xcconfig (copy to Secrets.xcconfig)
 ├── scripts/                  swift-in-docker.sh (run core tests without a Mac)
-└── docs/                     ARCHITECTURE · SETUP · PHASE1_ACCEPTANCE · PRIVACY_AND_DATA · COSTS · RELEASE_READINESS · DEV_CHECKLIST
+└── docs/                     ARCHITECTURE · SETUP · TESTFLIGHT · PHASE1_ACCEPTANCE · PRIVACY_AND_DATA · COSTS · RELEASE_READINESS · DEV_CHECKLIST
 ```
 
 ## Quick start
 
+**No Mac?** Follow [docs/TESTFLIGHT.md](docs/TESTFLIGHT.md): GitHub builds and signs the app and delivers it to your iPhone through TestFlight.
+
+**With a Mac:**
 1. Open `VitalCoach.xcodeproj` in Xcode 16+, pick an iPhone simulator, press ▶︎.
 2. Choose **Try on this iPhone only** to explore without a backend.
 3. To enable Sign in with Apple and cloud backup, follow [docs/SETUP.md](docs/SETUP.md).

@@ -1,5 +1,7 @@
 # Founder setup guide
 
+> **On Windows?** You don't need a Mac to try the app. Follow [TESTFLIGHT.md](TESTFLIGHT.md) to have GitHub build it and install it on your iPhone via TestFlight. Steps 3–6 below (Supabase) are all done in a web browser too.
+
 You can run the app **before** doing any of this: on the sign-in screen choose **Try on this iPhone only**. Data then stays on that device only. The steps below turn on Sign in with Apple and cloud backup.
 
 > Never paste secret keys into chat, email, or Git. The only Supabase values that go into the app are the **project host** and the **anon (public) key**.

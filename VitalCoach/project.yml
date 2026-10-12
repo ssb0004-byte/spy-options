@@ -19,6 +19,8 @@ settings:
     SWIFT_STRICT_CONCURRENCY: complete
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     DEAD_CODE_STRIPPING: YES
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"       # CI overrides this with an increasing build number
 targets:
   VitalCoach:
     type: application
@@ -39,13 +41,14 @@ targets:
       path: App/Resources/Info.plist
       properties:
         CFBundleDisplayName: VitalCoach
-        CFBundleShortVersionString: "0.1.0"
-        CFBundleVersion: "1"
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         UIApplicationSupportsIndirectInputEvents: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
         NSHealthShareUsageDescription: "VitalCoach reads the health data you choose (such as weight and body composition from your scale, heart rate and steps) to show your trends. It never writes to Apple Health."
+        NSHealthUpdateUsageDescription: "VitalCoach does not write to Apple Health. If a future version offers this, you will be asked first."
         SUPABASE_HOST: $(SUPABASE_HOST)
         SUPABASE_ANON_KEY: $(SUPABASE_ANON_KEY)
     settings:
