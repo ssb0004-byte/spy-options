@@ -4,3 +4,13 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 data_raw/*.parquet
+
+# VitalCoach
+VitalCoach/**/.build/
+VitalCoach/**/.swiftpm/
+VitalCoach/**/xcuserdata/
+VitalCoach/**/DerivedData/
+VitalCoach/Config/Secrets.xcconfig
+VitalCoach/supabase/.temp/
+VitalCoach/supabase/.env
+.DS_Store
