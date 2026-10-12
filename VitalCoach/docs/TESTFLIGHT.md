@@ -81,7 +81,7 @@ Time: about 30–45 minutes the first time, plus up to 48 hours if you still nee
 
 ## Step 6 — Start a build
 
-**Easiest:** tell Claude "secrets are in, build it", and it will start one.
+**Easiest:** tell Claude "build it". It edits `.github/testflight-request.txt` and pushes, which starts the "VitalCoach TestFlight" workflow. Builds use Xcode 26, which App Store Connect requires.
 
 **Yourself:**
 1. Go to https://github.com/ssb0004-byte/spy-options/releases → **Draft a new release**.
