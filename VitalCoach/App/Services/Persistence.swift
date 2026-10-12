@@ -1,6 +1,6 @@
 import Foundation
 import Security
-import SwiftData
+@preconcurrency import SwiftData
 import VitalCore
 
 // MARK: - SwiftData models
@@ -60,7 +60,7 @@ final class StoredConflict {
 }
 
 enum PersistenceFactory {
-    static let schema = Schema([StoredRecord.self, StoredOutboxItem.self, StoredCursor.self, StoredConflict.self])
+    static var schema: Schema { Schema([StoredRecord.self, StoredOutboxItem.self, StoredCursor.self, StoredConflict.self]) }
 
     /// On-device store in Application Support, excluded from iCloud/iTunes backup and protected
     /// with `completeUntilFirstUserAuthentication` (encrypted at rest while the device is locked

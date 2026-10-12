@@ -8,6 +8,10 @@ public struct DailyPoint: Sendable, Equatable, Identifiable {
     public var sampleCount: Int
     public var quality: MeasurementQuality
     public var id: Date { day }
+
+    public init(day: Date, value: Double, sampleCount: Int, quality: MeasurementQuality) {
+        self.day = day; self.value = value; self.sampleCount = sampleCount; self.quality = quality
+    }
 }
 
 public struct TrendSummary: Sendable, Equatable {
