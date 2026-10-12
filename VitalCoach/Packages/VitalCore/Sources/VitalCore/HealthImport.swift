@@ -84,7 +84,8 @@ public enum HealthImportMerger {
                 byExternal[s.externalId] = m
                 out.append(m); updated += 1
             } else {
-                let m = HealthMeasurement(userId: userId, kind: s.kind, value: s.value, startAt: s.startAt, endAt: s.endAt,
+                let m = HealthMeasurement(id: DeterministicUUID.make("healthkit|\(userId.uuidString)|\(s.externalId)"),
+                                          userId: userId, kind: s.kind, value: s.value, startAt: s.startAt, endAt: s.endAt,
                                           sourceKind: .healthKit, sourceName: s.sourceName, sourceBundleId: s.sourceBundleId,
                                           externalId: s.externalId, quality: quality, clientUpdatedAt: now)
                 byExternal[s.externalId] = m

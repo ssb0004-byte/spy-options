@@ -194,3 +194,27 @@ struct TrendTests {
         #expect(SourcePreference.latest([a, m(.bodyMass, 79, day: 2, source: .manual)])?.value == 79)
     }
 }
+
+@Suite("Timestamps")
+struct TimestampTests {
+    @Test(arguments: [1_780_000_000.123, 1_780_000_000.122, 0.001, 1_780_000_000.9995, -0.5, 1_780_000_000])
+    func formatParseIsStable(seconds: Double) throws {
+        let once = ISO8601.format(Date(timeIntervalSince1970: seconds))
+        let twice = ISO8601.format(try #require(ISO8601.parse(once)))
+        #expect(once == twice)
+    }
+
+    @Test func formatsKnownValues() {
+        #expect(ISO8601.format(Date(timeIntervalSince1970: 1_780_000_000.123)) == "2026-05-28T20:26:40.123Z")
+        #expect(ISO8601.format(Date(timeIntervalSince1970: 1_780_000_000.9996)) == "2026-05-28T20:26:41.000Z")
+        #expect(ISO8601.format(Date(timeIntervalSince1970: -0.5)) == "1969-12-31T23:59:59.500Z")
+    }
+
+    @Test func parsesPostgresShapes() throws {
+        let a = try #require(ISO8601.parse("2026-05-28T20:26:40.123456+00:00"))
+        #expect(ISO8601.format(a) == "2026-05-28T20:26:40.123Z")
+        let b = try #require(ISO8601.parse("2026-05-28 16:26:40.5-04:00"))
+        #expect(ISO8601.format(b) == "2026-05-28T20:26:40.500Z")
+        #expect(ISO8601.parse("2026-05-28T20:26:40+00") != nil)
+    }
+}

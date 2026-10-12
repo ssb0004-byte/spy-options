@@ -227,6 +227,15 @@ struct HealthImportTests {
         #expect(changed.toSave.first { $0.externalId == "b" }?.deletedAt == t0)
     }
 
+    @Test func importIdsAreDeterministicAcrossDevices() {
+        let a = HealthImportMerger.merge(userId: user, incoming: [sample("hk-1")], deletedExternalIds: [], existing: [], now: t0)
+        let b = HealthImportMerger.merge(userId: user, incoming: [sample("hk-1")], deletedExternalIds: [], existing: [], now: t0)
+        #expect(a.toSave[0].id == b.toSave[0].id)
+        let other = HealthImportMerger.merge(userId: UUID(), incoming: [sample("hk-1")], deletedExternalIds: [], existing: [], now: t0)
+        #expect(other.toSave[0].id != a.toSave[0].id)
+        #expect(DeterministicUUID.make("x").uuidString.dropFirst(14).first == "8")
+    }
+
     @Test func rejectsImplausibleAndNeverTouchesManualEntries() {
         let manual = HealthMeasurement(userId: user, kind: .bodyMass, value: 81, startAt: t0, sourceKind: .manual, externalId: "a", quality: .selfReported)
         let r = HealthImportMerger.merge(userId: user, incoming: [sample("a"), sample("x", .bodyMass, 5000)], deletedExternalIds: ["a"], existing: [manual], now: t0)

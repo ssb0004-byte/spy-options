@@ -1,0 +1,28 @@
+# Minimal Supabase CLI config for local development (`supabase start`).
+project_id = "vitalcoach"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 16
+
+[auth]
+enabled = true
+site_url = "vitalcoach://auth-callback"
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_signup = true
+
+[auth.external.apple]
+enabled = true
+# For native iOS sign-in, list your app's bundle identifier here (comma-separated if several).
+client_id = "com.example.vitalcoach"
+secret = ""
+
+[functions.delete-account]
+verify_jwt = true

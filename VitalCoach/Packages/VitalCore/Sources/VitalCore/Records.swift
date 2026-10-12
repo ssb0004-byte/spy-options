@@ -75,26 +75,36 @@ public enum VitalJSON {
 }
 
 public enum ISO8601 {
+    /// Formats with exactly millisecond precision, rounding (not truncating) so that
+    /// format → parse → format is stable. Truncation of binary floating-point seconds would
+    /// otherwise lose 1 ms per round trip.
     public static func format(_ date: Date) -> String {
-        date.formatted(.iso8601.year().month().day().dateSeparator(.dash)
-            .time(includingFractionalSeconds: true).timeSeparator(.colon)
-            .timeZone(separator: .omitted))
+        let ms = Int64((date.timeIntervalSince1970 * 1000).rounded())
+        let seconds = ms >= 0 ? ms / 1000 : (ms - 999) / 1000
+        let fraction = ms - seconds * 1000
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC")!
+        let c = utc.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date(timeIntervalSince1970: TimeInterval(seconds)))
+        return String(format: "%04d-%02d-%02dT%02d:%02d:%02d.%03lldZ", c.year!, c.month!, c.day!, c.hour!, c.minute!, c.second!, fraction)
     }
 
     public static func parse(_ string: String) -> Date? {
-        // Postgres returns e.g. "2026-03-08T09:30:00.123456+00:00"; accept several shapes.
-        let fractional = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
-        if let d = try? fractional.parse(string) { return d }
-        if let d = try? Date.ISO8601FormatStyle().parse(string) { return d }
-        // Trim microseconds to milliseconds which the formatter handles reliably.
-        if let dot = string.firstIndex(of: ".") {
-            let afterDot = string[string.index(after: dot)...]
-            let digits = afterDot.prefix(while: \.isNumber)
-            let rest = afterDot.dropFirst(digits.count)
-            let trimmed = string[..<dot] + "." + digits.prefix(3).padding(toLength: 3, withPad: "0", startingAt: 0) + rest
-            if let d = try? fractional.parse(String(trimmed)) { return d }
+        // Accepts "2026-03-08T09:30:00Z", "…00.123Z", "…00.123456+00:00" (Postgres) and offsets.
+        var s = string.trimmingCharacters(in: .whitespaces)
+        if s.count > 10, s[s.index(s.startIndex, offsetBy: 10)] == " " {
+            s.replaceSubrange(s.index(s.startIndex, offsetBy: 10)...s.index(s.startIndex, offsetBy: 10), with: "T")
         }
-        return nil
+        var fraction: Decimal = 0
+        if let dot = s.firstIndex(of: ".") {
+            let digits = s[s.index(after: dot)...].prefix(while: \.isNumber)
+            guard !digits.isEmpty else { return nil }
+            fraction = Decimal(string: "0." + digits) ?? 0
+            s.removeSubrange(dot..<s.index(dot, offsetBy: digits.count + 1))
+        }
+        if s.hasSuffix("+00") || s.hasSuffix("-00") { s += ":00" }
+        guard let whole = try? Date.ISO8601FormatStyle().parse(s) else { return nil }
+        let ms = (NSDecimalNumber(decimal: fraction * 1000).doubleValue).rounded()
+        return Date(timeIntervalSince1970: whole.timeIntervalSince1970 + ms / 1000)
     }
 }
 
@@ -141,4 +151,24 @@ public struct SystemTimeSource: TimeSource {
 public struct FixedTimeSource: TimeSource {
     public var now: Date
     public init(_ now: Date) { self.now = now }
+}
+
+/// Deterministic UUID (RFC 9562 version 8 layout) from a string, using two FNV-1a 64-bit hashes.
+/// Used so the same HealthKit sample imported on two devices maps to the same record id.
+/// Not cryptographic — ids are not secrets, and RLS (not id secrecy) protects data.
+public enum DeterministicUUID {
+    public static func make(_ name: String) -> UUID {
+        func fnv(_ seed: UInt64) -> UInt64 {
+            var h: UInt64 = 0xcbf29ce484222325 ^ seed
+            for b in name.utf8 { h ^= UInt64(b); h = h &* 0x100000001b3 }
+            return h
+        }
+        var bytes = [UInt8](repeating: 0, count: 16)
+        let a = fnv(0), b = fnv(0x9E3779B97F4A7C15)
+        for i in 0..<8 { bytes[i] = UInt8((a >> (UInt64(i) * 8)) & 0xff); bytes[8 + i] = UInt8((b >> (UInt64(i) * 8)) & 0xff) }
+        bytes[6] = (bytes[6] & 0x0f) | 0x80 // version 8
+        bytes[8] = (bytes[8] & 0x3f) | 0x80 // RFC variant
+        return UUID(uuid: (bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+                           bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15]))
+    }
 }
