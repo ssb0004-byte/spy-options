@@ -7,7 +7,7 @@ Legend:
 
 | # | Criterion | Status | Evidence |
 |---|---|---|---|
-| 1 | Complete Xcode project opens and builds for iOS 18 | 🟡 | `VitalCoach.xcodeproj` generated from `project.yml`; CI `ios-app` job builds and tests on a macOS runner |
+| 1 | Complete Xcode project opens and builds for iOS 18 | ✅ | CI `ios-app` job (Xcode 16.4, iOS Simulator): build succeeded; 4 SwiftData app tests + 86 VitalCore tests passed. Remaining warnings are Swift 6-mode concurrency diagnostics only (see ARCHITECTURE.md). |
 | 2 | Tab navigation: Home, Trends, Routine, Coach, Profile | 🟡 | `App/VitalCoachApp.swift` |
 | 3 | Sign in with Apple → Supabase session; tokens in Keychain; refresh; sign-out | ✅ protocol / 🟡 UI | `SupabaseTests` (request shape, raw-nonce flow, refresh de-duplication, failed refresh signs out) |
 | 4 | Device-only mode when the backend isn't configured, clearly labelled | 🟡 | `SignInView`, Home banner |

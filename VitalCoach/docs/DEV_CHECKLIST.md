@@ -36,7 +36,7 @@
 
 ## Phase 5 — release
 
-- [ ] Move the app target to Swift 6 language mode
+- [ ] Move the app target to Swift 6 language mode (current CI warnings: `#Predicate` key paths are non-Sendable in SwiftData, HealthKit query results are non-Sendable, observer closure 'sending')
 - [ ] Security review, RLS penetration test, dependency audit
 - [ ] Privacy policy, terms, App Store privacy label, review notes
 - [ ] TestFlight with 5–20 testers
