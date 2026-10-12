@@ -11,6 +11,7 @@ name: VitalCoach TestFlight
 on:
   push:
     tags: ["vitalcoach-testflight-*"]
+    branches: ["**"]
     # Or: edit .github/testflight-request.txt and push (any branch). Lets automation that can't
     # push tags request a build.
     paths: [".github/testflight-request.txt"]
