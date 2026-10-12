@@ -30,8 +30,14 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - name: Show toolchain
-        run: xcodebuild -version && swift --version
+      - name: Select Xcode 26 (App Store Connect requires the iOS 26 SDK)
+        run: |
+          XC=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | grep -vi beta | sort -V | tail -1)
+          [ -n "$XC" ] || XC=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XC" ]; then echo "::error::No Xcode 26 on this runner. Available:"; ls -d /Applications/Xcode*.app; exit 1; fi
+          echo "Using $XC"
+          sudo xcode-select -s "$XC/Contents/Developer"
+          xcodebuild -version
       - name: Build and test
         working-directory: VitalCoach
         run: |
