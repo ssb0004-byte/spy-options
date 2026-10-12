@@ -4,12 +4,16 @@
 #
 # Triggers (only on demand, because macOS runner minutes are expensive):
 #   - push a tag named vitalcoach-testflight-<anything>  (works from any branch), or
+#   - change .github/testflight-request.txt and push, or
 #   - Actions tab → "VitalCoach TestFlight" → Run workflow (once this file is on the default branch).
 name: VitalCoach TestFlight
 
 on:
   push:
     tags: ["vitalcoach-testflight-*"]
+    # Or: edit .github/testflight-request.txt and push (any branch). Lets automation that can't
+    # push tags request a build.
+    paths: [".github/testflight-request.txt"]
   workflow_dispatch:
 
 concurrency:
