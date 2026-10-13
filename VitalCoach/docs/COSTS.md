@@ -21,6 +21,19 @@ Prices change often. The figures below are planning estimates as of this writing
 
 **Target: under $25/month for development and limited private testing is realistic.**
 
+## Phase 2 as built
+
+- **Model:** `gpt-5-mini` by default (low-cost), configurable in the `ai_config` table.
+- **Typical cost:**
+  - A typical chat turn sends about 3–6k input tokens (instructions + data summary + history) and receives under 1k output tokens.
+  - At low-cost-model prices, that's a fraction of a cent per message.
+  - A daily briefing plus ~10 messages a day is roughly **$1–3 per active user per month**. Check current OpenAI pricing; reasoning tokens count as output.
+- **Hard caps:**
+  - 60k tokens and 60 requests per user per day, and 6 requests per minute.
+  - 5M tokens per month across the whole app (about $5–15 at low-cost prices).
+  - Plus the monthly budget set in the OpenAI dashboard.
+- **Briefings** are cached once per day and weekly reviews once per week, so reopening them costs nothing.
+
 ## Growth
 
 | Active users | Likely setup | Order of magnitude |

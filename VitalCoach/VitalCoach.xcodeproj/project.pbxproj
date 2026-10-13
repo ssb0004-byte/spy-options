@@ -11,6 +11,7 @@
 		25B68E1E60DFB08C3E1F53C7 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CF64B37A9007ABF65B48E2 /* AppModel.swift */; };
 		2E913FD6A6B7FCABBD49CF5E /* VitalCore in Frameworks */ = {isa = PBXBuildFile; productRef = 55C7480F1710E931F4B7B562 /* VitalCore */; };
 		3FF6875D92595A2E85E1F2B5 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E01F5ACC4AA68E59A05D7D /* SignInView.swift */; };
+		4D05D987F635E0EC957A4822 /* AppModel+Coach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3384D82CCF39ED0A82F374C8 /* AppModel+Coach.swift */; };
 		643E00A600C3D16E69B7C7A8 /* VitalCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2393B4094610CE4C573C4E85 /* VitalCore */; };
 		6F2E0C28A2A84785B3DAACF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB6D40A52226CC4C46CC524E /* Assets.xcassets */; };
 		7670941BBD74328C593AEDDC /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */; };
@@ -46,6 +47,7 @@
 		0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalCoachApp.swift; sourceTree = "<group>"; };
 		171905C2C02FCABDFF22D8ED /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		290E9775FCA3E82FF2A8D01A /* VitalCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VitalCore; path = Packages/VitalCore; sourceTree = SOURCE_ROOT; };
+		3384D82CCF39ED0A82F374C8 /* AppModel+Coach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppModel+Coach.swift"; sourceTree = "<group>"; };
 		3C1BD570409275858AAB4242 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		478A1C8A0F0FAB7526190360 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
 		4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				76CF64B37A9007ABF65B48E2 /* AppModel.swift */,
+				3384D82CCF39ED0A82F374C8 /* AppModel+Coach.swift */,
 				0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */,
 				F6937FA0B88E16AC84F1D6A0 /* DesignSystem */,
 				FD4C7353EB0BEC600FB3B879 /* Features */,
@@ -365,6 +368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D05D987F635E0EC957A4822 /* AppModel+Coach.swift in Sources */,
 				25B68E1E60DFB08C3E1F53C7 /* AppModel.swift in Sources */,
 				C64D4B1BA38CE4D524EA9A1E /* CheckInView.swift in Sources */,
 				CAE02AFB57CC95C4CE53BE20 /* CoachView.swift in Sources */,

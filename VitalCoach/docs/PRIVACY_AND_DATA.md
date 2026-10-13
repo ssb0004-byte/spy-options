@@ -12,13 +12,27 @@ This describes what the Phase 1 code does. It is not a legal privacy policy; one
 | Audit events (non-sensitive summaries such as "active → paused") | Yes | Yes |
 | Session tokens | Keychain (`AfterFirstUnlockThisDeviceOnly`) | n/a |
 | HealthKit query anchors, onboarding progress, "data received" flags | UserDefaults (no health values) | No |
-| Progress photos, AI conversations, lab results | Not implemented in Phase 1 | — |
+| AI conversations, briefings, coach memory | Fetched on demand, not stored offline | Yes, with AI consent; written only by the server |
+| Progress photos, lab results | Not implemented yet | — |
 
 - **No analytics, crash-reporting, advertising or tracking SDKs** are included. The app makes network calls only to the configured Supabase project.
 - **Consent is separate per purpose and recorded in an append-only ledger:** terms + 18+ attestation, cloud sync, AI processing (Phase 2), and photo storage (later).
 - **Without cloud-sync consent, nothing is uploaded.** Changes still queue locally and upload only after consent is granted.
 - **HealthKit:** read-only, requested per category. HealthKit data is never used for advertising or sold, in line with App Store Review Guideline 5.1.3.
 - **Logging:** server errors are reported to the user using only the HTTP status and Postgres error code. Response bodies, which may echo health data, are never logged. The Edge Function logs only a status code.
+
+## AI coach (Phase 2)
+
+- **Consent:** off until the user turns on *AI processing of health information*. The server checks this consent itself before every AI call.
+- **What's sent:** a short summary computed by the server from the user's own synced records. It covers recent metric trends, the current routine, logged dose counts, check-in averages, open side effects, and memories the user approved, but never the full history. The user can see exactly this summary in **Coach → What the coach can see**. The summary also includes the conversation's last 12 messages.
+- **Provider:** OpenAI API, called only from the `coach` Edge Function. The key is stored only in Supabase secrets.
+  - Requests use `store: false`, so responses aren't kept for later retrieval.
+  - Per OpenAI's published API policy, API data isn't used to train models by default. OpenAI may keep request logs for up to 30 days for abuse monitoring unless Zero Data Retention is arranged.
+  - **Verify the current terms at openai.com/policies before public release, and list OpenAI as a processor in the privacy policy.**
+- **Stored in Supabase:** conversations, coach replies, briefings, usage counts, and memory. Retrieval is RLS-scoped, and clients can't write coach replies. Everything is deleted with the account (verified by `supabase/tests/30_coach_test.sql`).
+- **Memory:** the coach can only *suggest* memories. They're used only after the user approves them, and can be edited, deleted or cleared at any time.
+- **Logs:** the function logs status codes only, never prompts, replies or health data.
+- **Withdrawing AI consent:** stops all further AI calls immediately. Past conversations stay visible until the user deletes them or the account.
 
 ## Encryption
 
@@ -42,7 +56,7 @@ Profile → Export my data produces a JSON file with every record the account ha
 - Supabase point-in-time recovery and daily backups can retain deleted data until those backups expire. Check your plan's backup retention; it is several days on paid plans.
 - Data in Apple Health is untouched, because it belongs to the user's Health app.
 - Exports the user saved elsewhere are outside the app's control.
-- In Phase 2: whatever the AI provider retains under its API data policy. Document this, and prefer zero-data-retention options if eligible.
+- Whatever the AI provider retains under its API data policy (abuse-monitoring logs up to 30 days unless Zero Data Retention applies).
 
 ## Not yet done (required before public release)
 

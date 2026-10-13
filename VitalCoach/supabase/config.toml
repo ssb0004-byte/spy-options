@@ -1,28 +1,10 @@
-# Minimal Supabase CLI config for local development (`supabase start`).
+# Supabase CLI config. Only what deployment needs; auth providers are configured in the dashboard.
 project_id = "vitalcoach"
 
-[api]
-enabled = true
-port = 54321
-schemas = ["public"]
-max_rows = 1000
-
-[db]
-port = 54322
-major_version = 16
-
-[auth]
-enabled = true
-site_url = "vitalcoach://auth-callback"
-jwt_expiry = 3600
-enable_refresh_token_rotation = true
-enable_signup = true
-
-[auth.external.apple]
-enabled = true
-# For native iOS sign-in, list your app's bundle identifier here (comma-separated if several).
-client_id = "com.example.vitalcoach"
-secret = ""
+# Both functions verify the caller's token themselves (auth.getUser), which also works with
+# Supabase's newer JWT signing keys, so gateway JWT verification is turned off.
+[functions.coach]
+verify_jwt = false
 
 [functions.delete-account]
-verify_jwt = true
+verify_jwt = false

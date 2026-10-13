@@ -23,6 +23,17 @@ jobs:
         run: VitalCoach/scripts/swift-in-docker.sh test
       - name: Supabase migrations, RLS and schema round-trip tests (local Postgres)
         run: VitalCoach/supabase/tests/run.sh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Coach Edge Function unit tests
+        run: node --experimental-strip-types --no-warnings --test VitalCoach/supabase/functions/coach/lib/coach.test.ts
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check Edge Functions (Deno)
+        working-directory: VitalCoach/supabase/functions
+        run: deno check coach/index.ts delete-account/index.ts
 
   ios-app:
     name: iOS app build + tests (Simulator)

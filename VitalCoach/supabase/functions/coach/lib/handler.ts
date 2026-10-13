@@ -64,16 +64,17 @@ export async function handle(req: CoachRequest, userId: string, deps: Deps): Pro
     : new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
   const utcDay = now.toISOString().slice(0, 10);
 
-  // 1. Consent is enforced on the server, from the user's own consent ledger.
-  if (!(await deps.db.aiConsentGranted())) {
-    return err(403, "consent_required", "Turn on 'AI processing of health information' in Profile → Privacy → Consents to use the coach.");
-  }
-
   const rows = await deps.db.loadRows(today);
   const ctx: CoachContext = buildContext(rows, today, tz);
 
-  // Transparency: show exactly what the coach would see, without calling the model.
+  // Transparency: show the user exactly what the coach would see. Nothing is sent to the AI
+  // provider, so this works before AI consent is given (it helps the user decide).
   if (req.mode === "context_preview") return { status: 200, body: { context: ctx } };
+
+  // 1. Consent is enforced on the server, from the user's own consent ledger, before any AI call.
+  if (!(await deps.db.aiConsentGranted())) {
+    return err(403, "consent_required", "Turn on 'AI processing of health information' in Profile → Privacy → Consents to use the coach.");
+  }
 
   const message = req.mode === "chat" || req.mode === "checkin_followup" ? sanitizeUserText(req.message ?? "", MAX_MESSAGE_CHARS) : "";
   if (req.mode === "chat" && !message) return err(400, "empty_message", "Please type a message.");

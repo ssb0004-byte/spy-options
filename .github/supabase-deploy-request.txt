@@ -1,0 +1,2 @@
+Edit this file and push to deploy Supabase migrations + Edge Functions (see VitalCoach/docs/PHASE2_SETUP.md).
+request: 0

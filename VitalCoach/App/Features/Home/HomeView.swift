@@ -27,6 +27,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingCheckIn) { CheckInView() }
             .sheet(isPresented: $showingAddMeasurement) { AddMeasurementView() }
+            .task { await model.loadBriefing() }
         }
     }
 
@@ -65,10 +66,37 @@ struct HomeView: View {
         }
     }
 
-    private var coachCard: some View {
-        Card(title: "Coach", systemImage: "sparkles") {
-            Text("Your AI coach arrives in the next update. Until then, Trends shows how your measurements are changing, calculated directly from your data.")
-                .font(.callout).foregroundStyle(.secondary)
+    private var coachCard: some View { BriefingCard() }
+}
+
+/// Today's AI briefing (generated once per day on the server), or what's needed to enable it.
+struct BriefingCard: View {
+    @Environment(AppModel.self) var model
+
+    var body: some View {
+        Card(title: "Morning briefing", systemImage: "sparkles") {
+            switch model.coachAvailability {
+            case .ready:
+                if let b = model.briefing {
+                    Text(b.title).font(.headline)
+                    Text(b.body).font(.callout).textSelection(.enabled)
+                    BasisFooter(basis: b.payload?.basis, dataPoints: b.payload?.dataPointsUsed)
+                } else if model.isLoadingBriefing {
+                    HStack { ProgressView(); Text("Preparing your briefing…").font(.callout).foregroundStyle(.secondary) }
+                } else if let msg = model.briefingMessage {
+                    Text(msg).font(.callout).foregroundStyle(.secondary)
+                } else {
+                    Button("Get today's briefing") { Task { await model.loadBriefing() } }.buttonStyle(.bordered)
+                }
+                if model.briefing != nil || model.briefingMessage != nil {
+                    Button("Refresh") { Task { await model.loadBriefing(force: true) } }
+                        .font(.footnote).disabled(model.isLoadingBriefing)
+                }
+            case .deviceOnly:
+                Text("Sign in with Apple to get a daily AI briefing based on your data.").font(.callout).foregroundStyle(.secondary)
+            case .needsCloudBackup, .needsAIConsent:
+                Text("Turn on AI coaching in the Coach tab to get a short daily briefing based on your data.").font(.callout).foregroundStyle(.secondary)
+            }
         }
     }
 }

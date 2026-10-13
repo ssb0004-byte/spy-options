@@ -57,6 +57,15 @@ final class AppModel {
     private let container: ModelContainer
     private let store: SwiftDataRecordStore
     private let auth: SupabaseAuth?
+    /// AI coach API (Phase 2). nil in device-only mode or without a backend.
+    private(set) var coach: CoachClient?
+    var briefing: CoachInsight?
+    var briefingMessage: String?
+    var isLoadingBriefing = false
+    /// Device-level preference (not health data), so it lives in UserDefaults.
+    var briefingReminderEnabled: Bool = UserDefaults.standard.object(forKey: "coach.briefingReminder") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(briefingReminderEnabled, forKey: "coach.briefingReminder") }
+    }
     private var repository: Repository?
     private var syncEngine: SyncEngine?
     private var syncTask: Task<Void, Never>?
@@ -122,6 +131,7 @@ final class AppModel {
         if !localOnly, let auth, let backend {
             syncEngine = SyncEngine(userId: userId, store: store,
                                     remote: SupabaseRemoteStore(config: backend, transport: URLSessionTransport(), auth: auth))
+            coach = CoachClient(config: backend, transport: URLSessionTransport(), auth: auth)
         }
         onboarding = loadOnboarding(userId)
         await reload()
@@ -178,6 +188,7 @@ final class AppModel {
     private func resetSessionState() {
         syncTask?.cancel()
         repository = nil; syncEngine = nil; userId = nil; isLocalOnly = false
+        coach = nil; briefing = nil; briefingMessage = nil
         data = UserData(); syncStatus = SyncStatus(); onboarding = OnboardingState()
         phase = .signedOut
     }
@@ -385,6 +396,8 @@ final class AppModel {
     func refreshReminders() async {
         guard let prefs = data.preferences else { return }
         await notifications.scheduleDailyCheckIn(enabled: prefs.notifications.dailyCheckIn, at: prefs.notifications.checkInTime)
+        await notifications.scheduleMorningBriefing(enabled: coachAvailability == .ready && briefingReminderEnabled,
+                                                    at: briefingReminderTime)
         guard prefs.notifications.doseReminders, let end = today.adding(days: 14, calendar: calendar) else {
             await notifications.replaceDoseReminders([], plannedById: [:])
             return

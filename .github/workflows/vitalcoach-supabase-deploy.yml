@@ -1,0 +1,75 @@
+# Deploys VitalCoach database migrations and Edge Functions to your Supabase project.
+# Runs only when requested: change .github/supabase-deploy-request.txt and push, or use
+# "Run workflow" in the Actions tab (once this file is on the default branch).
+# Setup: VitalCoach/docs/PHASE2_SETUP.md
+name: VitalCoach Supabase deploy
+
+on:
+  push:
+    branches: ["**"]
+    paths: [".github/supabase-deploy-request.txt"]
+  workflow_dispatch:
+
+concurrency:
+  group: vitalcoach-supabase-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_HOST: ${{ vars.SUPABASE_HOST }}
+    defaults:
+      run:
+        working-directory: VitalCoach
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check configuration
+        run: |
+          missing=()
+          [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing+=(SUPABASE_ACCESS_TOKEN)
+          [ -n "$SUPABASE_DB_PASSWORD" ] || missing+=(SUPABASE_DB_PASSWORD)
+          [ -n "$SUPABASE_HOST" ] || missing+=("SUPABASE_HOST (variable)")
+          if [ ${#missing[@]} -gt 0 ]; then echo "::error::Missing: ${missing[*]}. See VitalCoach/docs/PHASE2_SETUP.md"; exit 1; fi
+          HOST=$(printf '%s' "$SUPABASE_HOST" | sed -E 's#^[a-zA-Z]+://##; s#/.*$##')
+          echo "PROJECT_REF=${HOST%%.*}" >> "$GITHUB_ENV"
+          echo "Project: ${HOST%%.*}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Coach unit tests (must pass before deploying)
+        run: node --experimental-strip-types --no-warnings --test supabase/functions/coach/lib/coach.test.ts
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link project
+        run: supabase link --project-ref "$PROJECT_REF" -p "$SUPABASE_DB_PASSWORD"
+
+      - name: Apply database migrations
+        run: |
+          # The Phase 1 migration was applied by hand in the SQL editor; record it as applied
+          # so it isn't run twice. Safe to repeat.
+          supabase migration repair 20261012000001 --status applied --linked -p "$SUPABASE_DB_PASSWORD" || true
+          supabase migration list --linked -p "$SUPABASE_DB_PASSWORD"
+          supabase db push --linked -p "$SUPABASE_DB_PASSWORD" --yes
+
+      - name: Deploy Edge Functions
+        run: |
+          supabase functions deploy coach --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
+          supabase functions deploy delete-account --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
+
+      - name: Check OpenAI key is configured
+        run: |
+          if supabase secrets list --project-ref "$PROJECT_REF" | grep -q OPENAI_API_KEY; then
+            echo "OPENAI_API_KEY is set."
+          else
+            echo "::warning::OPENAI_API_KEY is not set in Supabase → Edge Functions → Secrets. The coach will reply 'not set up' until it is."
+          fi

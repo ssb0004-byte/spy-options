@@ -75,6 +75,20 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
         try? await center.add(UNNotificationRequest(identifier: Self.checkInId, content: content, trigger: trigger))
     }
 
+    static let briefingId = "coach:morning-briefing"
+
+    /// Daily nudge to open the AI morning briefing (generated on demand when the app opens).
+    func scheduleMorningBriefing(enabled: Bool, at time: LocalTime) async {
+        center.removePendingNotificationRequests(withIdentifiers: [Self.briefingId])
+        guard enabled else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "Your morning briefing"
+        content.body = "A quick look at your trends and today's focus."
+        content.sound = .default
+        let trigger = UNCalendarNotificationTrigger(dateMatching: DateComponents(hour: time.hour, minute: time.minute), repeats: true)
+        try? await center.add(UNNotificationRequest(identifier: Self.briefingId, content: content, trigger: trigger))
+    }
+
     func removeAll() {
         center.removeAllPendingNotificationRequests()
         center.removeAllDeliveredNotifications()

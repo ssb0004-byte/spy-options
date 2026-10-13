@@ -265,8 +265,8 @@ test("goal reassessment saves a proposal for user approval", async () => {
   assert.equal((r.body.goal_proposal as Insight).payload.add instanceof Array, true);
 });
 
-test("context preview never calls the model", async () => {
-  const { db } = fakeDb();
+test("context preview never calls the model and works before AI consent", async () => {
+  const { db } = fakeDb({ consent: false });
   const m = modelReturning({ reply: "x" });
   const r = await handle({ mode: "context_preview" }, "u1", { db, model: m.fn, now });
   assert.equal(r.status, 200);

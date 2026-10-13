@@ -204,6 +204,21 @@ struct NotificationSettingsView: View {
                         }), displayedComponents: .hourAndMinute)
                 }
             }
+            if model.coachAvailability == .ready {
+                Section("Coach") {
+                    Toggle("Morning briefing reminder", isOn: Binding(
+                        get: { model.briefingReminderEnabled },
+                        set: { v in model.briefingReminderEnabled = v; Task { await model.refreshReminders() } }))
+                    if model.briefingReminderEnabled {
+                        DatePicker("Briefing time", selection: Binding(
+                            get: { Calendar.current.date(bySettingHour: model.briefingReminderTime.hour, minute: model.briefingReminderTime.minute, second: 0, of: Date()) ?? Date() },
+                            set: { d in
+                                model.setBriefingReminderTime(LocalTime(hour: Calendar.current.component(.hour, from: d), minute: Calendar.current.component(.minute, from: d)))
+                                Task { await model.refreshReminders() }
+                            }), displayedComponents: .hourAndMinute)
+                    }
+                }
+            }
             Text("Reminders never mark a dose as taken. Use the Taken / Skip buttons on the notification or in the app.")
                 .font(.footnote).foregroundStyle(.secondary)
         }
@@ -274,9 +289,9 @@ struct ConsentsView: View {
                     Text(type.explanation).font(.footnote)
                     Toggle(type.title, isOn: Binding(get: { model.data.consents.isGranted(type) },
                                                      set: { v in Task { await model.setConsent(type, granted: v) } }))
-                    .disabled(type == .cloudSync && (model.isLocalOnly || model.backend == nil))
+                    .disabled(model.isLocalOnly || model.backend == nil)
                 } footer: {
-                    if type == .aiProcessing { Text("Takes effect when the AI coach launches. Nothing is sent to an AI provider in this version.") }
+                    if type == .aiProcessing { Text("Used by the Coach tab and your morning briefing. Requires cloud backup. See exactly what's shared in Coach → What the coach can see.") }
                     if type == .cloudSync && model.isLocalOnly { Text("Sign in with Apple to enable backup.") }
                 }
             }

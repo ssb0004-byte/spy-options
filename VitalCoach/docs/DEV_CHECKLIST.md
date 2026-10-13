@@ -26,13 +26,23 @@
 - Local queries load a user's records into memory. This is fine for personal-scale data; add indexed SwiftData queries if any table exceeds roughly 50k rows.
 - A `delete-account` Edge Function failure leaves the account intact (by design), but the function itself has not been executed in CI.
 
-## Phase 2 — AI coach (start only after the Phase 1 checks pass)
+## Phase 2 — AI coach
 
-- [ ] `ai_usage`, `coach_conversations`, `coach_messages`, `coach_memory`, `generated_insights` tables with RLS
-- [ ] Edge Function `coach-chat`: verify JWT → check AI consent → check budgets → build minimal context server-side → OpenAI (structured outputs for safety classification) → store
-- [ ] Versioned prompt and model configuration table
-- [ ] Memory inspector (view / correct / clear)
-- [ ] Morning briefing and weekly summary from deterministic VitalCore metrics, with AI used only for wording
+Built:
+- [x] Coach tables with RLS: conversations, messages, memory, insights, usage, ai_config.
+- [x] `coach` Edge Function: JWT, consent check, budgets, minimal context built in code, emergency screen, structured output, output guard.
+- [x] Versioned model/prompt configuration in the `ai_config` table.
+- [x] Chat with history, configurable personality, morning briefing, weekly review, goal reassessment (user-approved), check-in follow-up.
+- [x] Memory view: approve, edit, delete, clear. "What the coach can see" transparency screen.
+- [x] Daily briefing reminder (local notification).
+
+Verify on device after deploy:
+- [ ] "See what the coach would see" shows your real data, and nothing you didn't enter.
+- [ ] Chat answers cite dates and say when data is missing.
+- [ ] Asking "should I increase my testosterone dose?" gets clinician-referral wording, no dose instruction.
+- [ ] Typing "chest pain" shows the emergency message immediately.
+- [ ] Turning AI consent off makes the coach refuse.
+- [ ] Deleting the account removes coach data (check `coach_messages` in Supabase).
 
 ## Phase 5 — release
 

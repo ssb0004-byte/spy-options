@@ -94,6 +94,39 @@ flowchart LR
     - Tokens are stored in the Keychain with `AfterFirstUnlockThisDeviceOnly`.
     - The local store uses `completeUntilFirstUserAuthentication` file protection and is excluded from backups. Error messages never echo server response bodies, which could contain health data.
 
+## Phase 2: AI coach
+
+```mermaid
+sequenceDiagram
+  participant App
+  participant Fn as coach Edge Function
+  participant DB as Postgres (RLS)
+  participant AI as OpenAI Responses API
+  App->>Fn: POST /functions/v1/coach (user JWT, mode, message)
+  Fn->>Fn: verify JWT (auth.getUser)
+  Fn->>DB: read user's records with user-scoped client (RLS)
+  Fn->>Fn: build deterministic summary (trends, routine, check-ins)
+  Fn->>DB: check AI consent ledger, budgets, per-minute rate
+  Fn->>Fn: urgent-symptom screen (no AI call if urgent)
+  Fn->>AI: instructions + data block + history, JSON-schema output, store:false
+  AI-->>Fn: structured reply (basis, safety flags, suggested memories, goal proposal)
+  Fn->>Fn: validate output, dose-directive guard, clinician notice
+  Fn->>DB: save message / insight / usage (service role)
+  Fn-->>App: reply + metadata
+```
+
+- **Where the code is:**
+  - `supabase/functions/coach/lib/*.ts`: pure modules (context, safety, prompt, budget, OpenAI client, handler), unit-tested with Node (`coach.test.ts`, 20 tests).
+  - `index.ts`: the Deno entry point and the Supabase database adapter.
+- **Server-side retrieval:** the coach reads only the user's own synced records, through RLS. Numbers are computed in code, never by the model.
+- **Versioned configuration:** the `ai_config` table (model, reasoning effort, token limits, budgets, prompt version). Each message stores the model and prompt version that produced it.
+- **Safety layers:**
+  1. A deterministic emergency screen runs before the model.
+  2. The system rules forbid prescribing, dose changes and protocols for investigational compounds, invented citations, and causal claims.
+  3. The output is validated against a strict JSON schema.
+  4. A deterministic dose-directive guard appends a clinician notice.
+- **App side:** `CoachClient` in VitalCore (tested) and `App/Features/Coach`. The coach is online-only, and its data is not part of the offline sync engine.
+
 ## Swift 6 compatibility
 
 - **VitalCore** builds in **Swift 6 language mode** with complete strict-concurrency checking (verified with Swift 6.1.3).
