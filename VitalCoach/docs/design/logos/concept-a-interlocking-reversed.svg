@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="0" fill="#101B19"/><g transform="translate(-1.5 2.5)">
+<defs>
+<mask id="mcb" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120"><rect x="-10" y="-10" width="120" height="120" fill="#fff"/>
+<clipPath id="ocb"><rect x="0" y="0" width="44" height="42"/></clipPath>
+<path d="M28 20 L52 80 L84 14" stroke="#000" stroke-width="17.4" fill="none" stroke-linejoin="round" clip-path="url(#ocb)"/></mask>
+<mask id="mvb" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120"><rect x="-10" y="-10" width="120" height="120" fill="#fff"/>
+<path d="M69.09 25.57 A31 31 0 0 1 78.10 36.90" stroke="#000" stroke-width="17.4" fill="none"/></mask>
+</defs>
+<path d="M71.92 71.92 A31 31 0 1 1 78.10 36.90" fill="none" stroke="#75C4B0" stroke-width="11" stroke-linecap="round" mask="url(#mcb)"/>
+<path d="M28 20 L52 80 L84 14" fill="none" stroke="#F2F7F4" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" mask="url(#mvb)"/>
+<path d="M69.09 25.57 A31 31 0 0 1 78.10 36.90" fill="none" stroke="#75C4B0" stroke-width="11" stroke-linecap="round"/>
+</g></svg>
