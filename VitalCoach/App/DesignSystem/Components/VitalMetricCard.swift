@@ -119,8 +119,8 @@ struct VitalMetricCard: View {
         VitalMetricCard(title: "Weight", value: "182.4", unit: "lb", systemImage: "scalemass",
                         trend: VitalTrend(direction: .down, text: "−1.2 lb / 7 days", isFavorable: true),
                         sparkline: [184.1, 183.8, 183.9, 183.2, 183.0, 182.7, 182.4])
-        VitalMetricCard(title: "Body fat", value: "21.8", unit: "%", systemImage: "percent", badge: "Estimate",
-                        trend: VitalTrend(direction: .flat, text: "No change", isFavorable: nil),
+        VitalMetricCard(title: "Body fat", value: "21.8", unit: "%", systemImage: "percent",
+                        trend: VitalTrend(direction: .flat, text: "No change", isFavorable: nil), badge: "Estimate",
                         sparkline: [22.0, 21.9, 22.1, 21.8, 21.9, 21.8, 21.8])
     }
     .padding()
