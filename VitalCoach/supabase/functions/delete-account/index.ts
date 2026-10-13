@@ -37,10 +37,6 @@ Deno.serve(async (req) => {
   const jwt = authHeader.replace(/^Bearer\s+/i, "");
   if (!jwt) return json(401, { error: "missing_token" });
 
-  let body: { confirm?: boolean } = {};
-  try { body = await req.json(); } catch { /* empty body */ }
-  if (body.confirm !== true) return json(400, { error: "confirmation_required" });
-
   const url = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = adminKey();
   if (!serviceKey) return json(500, { error: "server_misconfigured" });
@@ -49,6 +45,11 @@ Deno.serve(async (req) => {
   const { data: userData, error: userError } = await admin.auth.getUser(jwt);
   if (userError || !userData?.user) return json(401, { error: "invalid_token" });
   const userId = userData.user.id;
+
+  // Only after identity is verified: require an explicit confirmation flag.
+  let body: { confirm?: boolean } = {};
+  try { body = await req.json(); } catch { /* empty body */ }
+  if (body.confirm !== true) return json(400, { error: "confirmation_required" });
 
   // Remove private storage objects under the user's prefix (bucket created in a later phase).
   const { data: objects } = await admin.storage.from("progress-photos").list(userId, { limit: 1000 });
