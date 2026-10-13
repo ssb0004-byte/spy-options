@@ -35,6 +35,8 @@ struct SupabaseTests {
         #expect(SupabaseConfig.from(info: ["SUPABASE_HOST": "abc.supabase.co", "SUPABASE_ANON_KEY": "k"])?.url.absoluteString == "https://abc.supabase.co")
         #expect(SupabaseConfig.from(info: ["SUPABASE_HOST": "$(SUPABASE_HOST)", "SUPABASE_ANON_KEY": "k"]) == nil)
         #expect(SupabaseConfig.from(info: ["SUPABASE_HOST": "https:", "SUPABASE_ANON_KEY": "k"]) == nil) // truncated xcconfig URL
+        #expect(SupabaseConfig.from(info: ["SUPABASE_HOST": "abc.supabase.co/rest/v1/", "SUPABASE_ANON_KEY": "k"])?.url.absoluteString == "https://abc.supabase.co")
+        #expect(SupabaseConfig.from(info: ["SUPABASE_HOST": "https://abc.supabase.co/", "SUPABASE_ANON_KEY": "k"])?.url.absoluteString == "https://abc.supabase.co")
     }
 
     @Test func appleSignInExchangesIdTokenWithRawNonce() async throws {

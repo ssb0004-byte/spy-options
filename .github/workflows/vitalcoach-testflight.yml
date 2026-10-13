@@ -68,6 +68,13 @@ jobs:
           sudo xcode-select -s "$XC/Contents/Developer"
           xcodebuild -version
 
+      - name: Normalise Supabase host
+        run: |
+          # Accept "https://abc.supabase.co/rest/v1/" etc. — the app needs just "abc.supabase.co".
+          HOST=$(printf '%s' "$SUPABASE_HOST" | sed -E 's#^[a-zA-Z]+://##; s#/.*$##')
+          echo "SUPABASE_HOST=$HOST" >> "$GITHUB_ENV"
+          if [ -n "$HOST" ] && [ -n "$SUPABASE_ANON_KEY" ]; then echo "Backend: $HOST"; else echo "::warning::SUPABASE_HOST/SUPABASE_ANON_KEY not set — app will run in device-only mode."; fi
+
       - name: Install API key
         run: |
           mkdir -p "$RUNNER_TEMP/keys"

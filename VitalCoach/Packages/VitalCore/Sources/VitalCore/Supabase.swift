@@ -23,8 +23,13 @@ public struct SupabaseConfig: Sendable, Equatable {
         }
         guard let key = clean("SUPABASE_ANON_KEY") else { return nil }
         let raw: String
-        if let host = clean("SUPABASE_HOST") {
-            guard !host.contains("/"), !host.contains(":") else { return nil }
+        if var host = clean("SUPABASE_HOST") {
+            // Tolerate pasted values like "https://abc.supabase.co/rest/v1/": keep only the host.
+            for prefix in ["https://", "http://"] where host.lowercased().hasPrefix(prefix) {
+                host = String(host.dropFirst(prefix.count))
+            }
+            host = String(host.prefix { $0 != "/" })
+            guard !host.isEmpty, !host.contains(":"), host.contains(".") else { return nil }
             raw = "https://\(host)"
         } else if let url = clean("SUPABASE_URL") {
             raw = url
