@@ -34,6 +34,7 @@ struct DoseLogSheet: View {
                     LabeledContent("Scheduled", value: planned.scheduledAt.formatted(date: .abbreviated, time: .shortened))
                     LabeledContent("Planned dose", value: "\(planned.dose.formatted), \(planned.route.displayName)")
                 }
+                .vitalRow()
                 Section(existing == nil ? "What happened?" : "Correct this entry") {
                     Picker("Outcome", selection: $action) {
                         Text("Taken").tag(AdministrationAction.taken)
@@ -47,14 +48,15 @@ struct DoseLogSheet: View {
                             Text("Amount")
                             TextField(DoseQuantity.format(planned.dose.amount), text: $amountText)
                                 .keyboardType(.decimalPad).multilineTextAlignment(.trailing)
-                            Text(planned.dose.unit.displayName).foregroundStyle(.secondary)
+                            Text(planned.dose.unit.displayName).foregroundStyle(VitalColors.textSecondary)
                         }
                         if !amountText.isEmpty && parsedAmount == nil {
-                            Text("Enter a positive number, e.g. 0.5 or 1/2.").font(.caption).foregroundStyle(.red)
+                            Text("Enter a positive number, e.g. 0.5 or 1/2.").font(.caption).foregroundStyle(VitalColors.critical)
                         }
                     }
                     TextField("Note (optional)", text: $note, axis: .vertical)
                 }
+                .vitalRow()
                 if let existing {
                     Section {
                         Button("Remove this log entry", role: .destructive) {
@@ -66,6 +68,7 @@ struct DoseLogSheet: View {
                     } footer: {
                         Text("The slot returns to “not logged”. The original entry is kept in the history for accuracy.")
                     }
+                    .vitalRow()
                 }
                 if !history.isEmpty {
                     Section("History") {
@@ -73,12 +76,14 @@ struct DoseLogSheet: View {
                             VStack(alignment: .leading) {
                                 Text("\(r.action.rawValue.capitalized)\(r.dose.map { " · \($0.formatted)" } ?? "")")
                                 Text("Recorded \(r.recordedAt.formatted(date: .abbreviated, time: .shortened))")
-                                    .font(.caption).foregroundStyle(.secondary)
+                                    .font(.caption).foregroundStyle(VitalColors.textSecondary)
                             }
                         }
                     }
+                    .vitalRow()
                 }
             }
+            .vitalListBackground()
             .navigationTitle(model.data.substance(planned.userSubstanceId)?.name ?? "Dose")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

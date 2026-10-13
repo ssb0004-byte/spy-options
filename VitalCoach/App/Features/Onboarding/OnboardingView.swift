@@ -5,19 +5,25 @@ import VitalCore
 /// it's asked and can be skipped; skipped items resurface later on the Profile tab.
 struct OnboardingView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
+                    VitalBrandLockup(markSize: 36)
                     stepView(model.nextOnboardingStep)
+                    // Parent-company attribution: onboarding footer only (see docs/design/BRAND.md).
+                    Text("VitalCoach Health · A PrecisionPeptidePens company")
+                        .vitalFont(.caption).foregroundStyle(VitalColors.textSecondary)
+                        .frame(maxWidth: .infinity)
                 }
                 .padding(Theme.Spacing.xl)
                 .frame(maxWidth: 600)
                 .frame(maxWidth: .infinity)
             }
             .background(Theme.pageBackground)
-            .animation(.default, value: model.nextOnboardingStep)
+            .animation(reduceMotion ? nil : .default, value: model.nextOnboardingStep)
         }
     }
 
@@ -51,8 +57,8 @@ private struct StepScaffold<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-            Text(title).font(.title.bold()).accessibilityAddTraits(.isHeader)
-            if let why { Text(why).font(.callout).foregroundStyle(.secondary) }
+            Text(title).vitalFont(.title).foregroundStyle(VitalColors.textPrimary).accessibilityAddTraits(.isHeader)
+            if let why { Text(why).vitalFont(.body).foregroundStyle(VitalColors.textSecondary) }
             content
             Button {
                 Task {
@@ -61,16 +67,17 @@ private struct StepScaffold<Content: View>: View {
                     model.saveOnboarding()
                 }
             } label: {
-                Text(continueTitle).frame(maxWidth: .infinity, minHeight: 44)
+                Text(continueTitle)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(VitalButtonStyle(kind: .primary))
             .disabled(!canContinue)
+            .accessibilityIdentifier("onboarding.continue")
             if !step.isRequired {
                 Button("Skip for now") {
                     model.onboarding.skip(step)
                     model.saveOnboarding()
                 }
-                .frame(maxWidth: .infinity)
+                .buttonStyle(VitalButtonStyle(kind: .tertiary))
             }
         }
     }
@@ -86,7 +93,7 @@ private struct WelcomeStep: View {
             }
             .font(.body)
             Text("Setup takes about two minutes. Only two steps are required; the rest can wait.")
-                .font(.footnote).foregroundStyle(.secondary)
+                .font(.footnote).foregroundStyle(VitalColors.textSecondary)
         }
     }
 }
@@ -263,7 +270,7 @@ private struct HealthKitStep: View {
                 }
             }
             Text("iOS doesn't tell apps whether you allowed reading. VitalCoach shows a category as connected only after data actually arrives.")
-                .font(.footnote).foregroundStyle(.secondary)
+                .font(.footnote).foregroundStyle(VitalColors.textSecondary)
         }
     }
 }
@@ -282,7 +289,7 @@ private struct CloudSyncStep: View {
                          why: ConsentType.cloudSync.explanation, continueTitle: "Turn on backup",
                          onContinue: { await model.setConsent(.cloudSync, granted: true) }) {
                 Text("You can turn this off later in Profile → Privacy. Turning it off stops uploads; it doesn't delete what's already stored (use Delete account for that).")
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(VitalColors.textSecondary)
             }
         }
     }
@@ -321,7 +328,7 @@ private struct DoneStep: View {
                      }) {
             if !model.onboarding.deferredPrompts.isEmpty {
                 Text("You skipped a few optional steps. You'll find them on your Profile tab whenever you want.")
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(VitalColors.textSecondary)
             }
         }
     }

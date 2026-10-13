@@ -91,7 +91,7 @@ struct MetricTrendCard: View {
 
         Card(title: kind.displayName, systemImage: "chart.xyaxis.line") {
             if daily.isEmpty {
-                Text("No \(kind.displayName.lowercased()) data in this range.").font(.callout).foregroundStyle(.secondary)
+                Text("No \(kind.displayName.lowercased()) data in this range.").font(.callout).foregroundStyle(VitalColors.textSecondary)
             } else {
                 Chart(daily) { p in
                     LineMark(x: .value("Date", p.day, unit: .day),
@@ -103,7 +103,7 @@ struct MetricTrendCard: View {
                         .foregroundStyle(by: .value("Quality", QualityBadge(quality: p.quality).label))
                         .symbolSize(daily.count > 60 ? 12 : 30)
                 }
-                .chartForegroundStyleScale(["Measured": Color.teal, "Estimate": Color.orange, "Self-reported": Color.indigo, "Calculated": Color.gray])
+                .chartForegroundStyleScale(["Measured": VitalColors.chart[0], "Estimate": VitalColors.chart[2], "Self-reported": VitalColors.chart[1], "Calculated": VitalColors.chart[5]])
                 .chartYScale(domain: .automatic(includesZero: false))
                 .chartYAxisLabel(MetricDisplay.unitLabel(kind, units: units))
                 .frame(height: 220)
@@ -113,13 +113,13 @@ struct MetricTrendCard: View {
             }
             if !gaps.isEmpty {
                 Text("\(gaps.count) gap\(gaps.count == 1 ? "" : "s") of a week or more with no data. Gaps are shown as missing, not estimated.")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(VitalColors.textSecondary)
             }
             if let explanation = kind.explanation {
-                Text(explanation).font(.caption).foregroundStyle(.secondary)
+                Text(explanation).font(.caption).foregroundStyle(VitalColors.textSecondary)
             }
             if !sources.isEmpty {
-                Text("Sources: \(sources.joined(separator: ", "))").font(.caption2).foregroundStyle(.secondary)
+                Text("Sources: \(sources.joined(separator: ", "))").font(.caption2).foregroundStyle(VitalColors.textSecondary)
             }
             NavigationLink("All entries") { MeasurementListView(kind: kind) }.font(.callout)
         }
@@ -140,7 +140,7 @@ struct MetricTrendCard: View {
             }
         }
         Text("Data on \(s.daysWithData) of \(s.dayCount) days. Trends describe change over time; they don't show what caused it.")
-            .font(.caption2).foregroundStyle(.secondary)
+            .font(.caption2).foregroundStyle(VitalColors.textSecondary)
     }
 }
 
@@ -185,18 +185,18 @@ struct CheckInTrendsCard: View {
             }
             .pickerStyle(.menu)
             if pts.isEmpty {
-                Text("No check-in answers for this in the selected range.").font(.callout).foregroundStyle(.secondary)
+                Text("No check-in answers for this in the selected range.").font(.callout).foregroundStyle(VitalColors.textSecondary)
             } else {
                 Chart(pts) { p in
                     PointMark(x: .value("Date", p.day, unit: .day), y: .value(series.rawValue, p.value))
-                        .foregroundStyle(Color.indigo)
+                        .foregroundStyle(VitalColors.chart[1])
                     LineMark(x: .value("Date", p.day, unit: .day), y: .value(series.rawValue, p.value))
-                        .foregroundStyle(Color.indigo.opacity(0.4))
+                        .foregroundStyle(VitalColors.chart[1].opacity(0.4))
                 }
                 .chartYScale(domain: series.scale)
                 .frame(height: 180)
                 .accessibilityLabel("\(series.rawValue) self-reported, \(pts.count) days")
-                Text("Self-reported. Only days you answered are shown.").font(.caption2).foregroundStyle(.secondary)
+                Text("Self-reported. Only days you answered are shown.").font(.caption2).foregroundStyle(VitalColors.textSecondary)
             }
         }
     }
@@ -212,7 +212,7 @@ struct GoalIndicatorsCard: View {
                 ForEach(goals) { g in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(g.displayName).font(.subheadline.weight(.medium))
-                        Text(g.suggestedIndicators.joined(separator: " · ")).font(.caption).foregroundStyle(.secondary)
+                        Text(g.suggestedIndicators.joined(separator: " · ")).font(.caption).foregroundStyle(VitalColors.textSecondary)
                     }
                 }
             }
@@ -235,7 +235,7 @@ struct MeasurementListView: View {
                         QualityBadge(quality: m.quality)
                     }
                     Text("\(m.startAt.formatted(date: .abbreviated, time: .shortened)) · \(m.sourceName ?? m.sourceKind.rawValue)")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.caption).foregroundStyle(VitalColors.textSecondary)
                     if let note = m.note { Text(note).font(.caption) }
                 }
                 .swipeActions {
@@ -245,13 +245,14 @@ struct MeasurementListView: View {
                 }
             }
         }
+        .vitalListBackground()
         .overlay {
             if items.isEmpty { EmptyStateView(title: "No entries", message: "Nothing recorded yet.", systemImage: "list.bullet") }
         }
         .navigationTitle(kind.displayName)
         .safeAreaInset(edge: .bottom) {
             Text("Apple Health entries are edited in the Health app; changes sync here automatically.")
-                .font(.caption2).foregroundStyle(.secondary).padding()
+                .font(.caption2).foregroundStyle(VitalColors.textSecondary).padding()
         }
     }
 }
@@ -275,15 +276,17 @@ struct AddMeasurementView: View {
                 }
                 HStack {
                     TextField("Value", text: $valueText).keyboardType(.decimalPad)
-                    Text(MetricDisplay.unitLabel(kind, units: model.data.units)).foregroundStyle(.secondary)
+                    Text(MetricDisplay.unitLabel(kind, units: model.data.units)).foregroundStyle(VitalColors.textSecondary)
                 }
                 DatePicker("When", selection: $date, in: ...Date())
                 TextField("Note (optional)", text: $note)
                 if let explanation = kind.explanation {
-                    Section { Text(explanation).font(.footnote).foregroundStyle(.secondary) }
+                    Section { Text(explanation).font(.footnote).foregroundStyle(VitalColors.textSecondary) }
+                    .vitalRow()
                 }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
+                if let error { Section { Text(error).foregroundStyle(VitalColors.critical) } }
             }
+            .vitalListBackground()
             .navigationTitle("Add measurement")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

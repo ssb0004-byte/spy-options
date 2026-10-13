@@ -140,9 +140,11 @@ struct AddSubstanceView: View {
                         Text("From the verified VitalCoach catalog (\(SubstanceCatalog.version)).")
                     }
                 }
+                .vitalRow()
             }
             if let customNotice {
                 Section { NoticeBanner(style: .warning, text: customNotice) }
+                .vitalRow()
             }
             Section {
                 TextField("Strength / form on label (optional)", text: $formulation)
@@ -154,6 +156,7 @@ struct AddSubstanceView: View {
                     ForEach([SubstanceStatus.active, .planned, .paused], id: \.self) { Text($0.displayName).tag($0) }
                 }
             }
+            .vitalRow()
             RegimenFormSection(draft: $draft, typicalRoutes: selection?.catalogEntry?.routes ?? [])
             if entryCategory.category.changesRequireClinician {
                 Section {
@@ -161,11 +164,14 @@ struct AddSubstanceView: View {
                                  ? "Enter exactly what your prescriber or the product label specifies. VitalCoach never suggests doses, schedules or cycles for peptides or compounded products."
                                  : "VitalCoach records what you and your clinician decided. It doesn't recommend doses or schedules for prescription, hormonal, peptide or compounded products.")
                 }
+                .vitalRow()
             }
             if let msg = draft.validationMessage, !draft.amountText.isEmpty {
                 Section { Label(msg, systemImage: "exclamationmark.circle").foregroundStyle(VitalColors.critical) }
+                .vitalRow()
             }
         }
+        .vitalListBackground()
         .scrollDismissesKeyboard(.interactively)
         .navigationTitle("Dose & schedule")
         .navigationBarTitleDisplayMode(.inline)
@@ -344,6 +350,7 @@ struct SubstanceSearchView: View {
                         .vitalFont(.secondary)
                         .foregroundStyle(VitalColors.textSecondary)
                 }
+                .vitalRow()
             } else {
                 Section {
                     if isSearching && results.isEmpty {
@@ -368,6 +375,7 @@ struct SubstanceSearchView: View {
                         .accessibilityIdentifier("routine.search.result.\(r.id)")
                     }
                 }
+                .vitalRow()
                 if !hasExactVerifiedMatch {
                     Section {
                         Button { searchFocused = false; onAddCustom() } label: {
@@ -379,9 +387,11 @@ struct SubstanceSearchView: View {
                     } footer: {
                         Text("Custom substances are marked as user-created and stay on this iPhone.")
                     }
+                    .vitalRow()
                 }
             }
         }
+        .vitalListBackground()
         .scrollDismissesKeyboard(.immediately)
         .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search \(category.searchNoun)")
         .searchFocused($searchFocused)
@@ -451,7 +461,9 @@ struct CustomSubstanceForm: View {
                 } footer: {
                     Text("Shown as “User-created” wherever it appears. It isn't checked against any reference and is never added to the shared VitalCoach catalog.")
                 }
+                .vitalRow()
             }
+            .vitalListBackground()
             .navigationTitle(isEditing ? "Edit custom substance" : "Custom substance")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -44,6 +44,7 @@ struct CheckInView: View {
             Form {
                 if plan.isWeekly {
                     Section { Text("Weekly check-in: a few extra questions help spot longer-term changes.").font(.footnote) }
+                    .vitalRow()
                 }
                 ForEach(plan.questions, id: \.self) { q in
                     Section {
@@ -51,11 +52,14 @@ struct CheckInView: View {
                     } footer: {
                         if let reason = plan.reasons[q] { Text(reason) }
                     }
+                    .vitalRow()
                 }
                 if let urgent, urgent.isUrgent {
                     Section { NoticeBanner(style: .critical, text: UrgentSymptomScreen.message) }
+                    .vitalRow()
                 }
             }
+            .vitalListBackground()
             .navigationTitle("Check-in")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -109,7 +113,7 @@ struct CheckInView: View {
         }
         .onDelete { painItems.remove(atOffsets: $0) }
         Button(painItems.isEmpty ? "Add pain location" : "Add another location") { painItems.append(PainDraft()) }
-        if painItems.isEmpty { Text("No pain today? Leave this empty.").font(.caption).foregroundStyle(.secondary) }
+        if painItems.isEmpty { Text("No pain today? Leave this empty.").font(.caption).foregroundStyle(VitalColors.textSecondary) }
     }
 
     private func save(_ plan: CheckInPlanner.Plan) async {

@@ -39,10 +39,12 @@ struct SubstanceDetailView: View {
                 if let i = s.indication { LabeledContent("Reason", value: i) }
                 if s.isPrescribed { LabeledContent("Prescribed", value: "Yes") }
             }
+            .vitalRow()
             if s.category.changesRequireClinician {
                 Section {
                     NoticeBanner(style: .info, text: "Changes to prescription, hormone, peptide or compounded products should be made with your clinician. VitalCoach records changes; it doesn't recommend them.")
                 }
+                .vitalRow()
             }
             Section("Current dose & schedule") {
                 if let r = current {
@@ -55,9 +57,10 @@ struct SubstanceDetailView: View {
                         Button("Log an unscheduled dose") { showingAsNeeded = true }
                     }
                 } else {
-                    Text("No dose recorded.").foregroundStyle(.secondary)
+                    Text("No dose recorded.").foregroundStyle(VitalColors.textSecondary)
                 }
             }
+            .vitalRow()
             if !recentPlanned.isEmpty {
                 Section {
                     ForEach(recentPlanned.prefix(20)) { p in
@@ -75,6 +78,7 @@ struct SubstanceDetailView: View {
                 } footer: {
                     Text("Taken \(adherence.taken) · skipped \(adherence.skipped) · missed \(adherence.missed) · not logged \(adherence.notLogged). Doses without a log are never counted as taken.")
                 }
+                .vitalRow()
             }
             if !unscheduled.isEmpty {
                 Section("Unscheduled doses") {
@@ -82,13 +86,14 @@ struct SubstanceDetailView: View {
                         LabeledContent((r.takenAt ?? r.recordedAt).formatted(date: .abbreviated, time: .shortened), value: r.dose?.formatted ?? "")
                     }
                 }
+                .vitalRow()
             }
             Section("Side effects") {
                 ForEach(effects) { e in
                     VStack(alignment: .leading) {
                         Text(e.summary)
                         Text("\(e.severity.rawValue.capitalized) · since \(e.onsetAt.formatted(date: .abbreviated, time: .omitted))\(e.resolvedAt == nil ? "" : " · resolved")")
-                            .font(.caption).foregroundStyle(.secondary)
+                            .font(.caption).foregroundStyle(VitalColors.textSecondary)
                     }
                     .swipeActions {
                         if e.resolvedAt == nil {
@@ -96,33 +101,38 @@ struct SubstanceDetailView: View {
                                 var u = e; u.resolvedAt = Date()
                                 Task { await model.save(u) }
                             }
-                            .tint(.green)
+                            .tint(VitalColors.success)
                         }
                     }
                 }
                 Button("Report a side effect") { showingSideEffect = true }
             }
+            .vitalRow()
             if history.count > 1 {
                 Section("Dose history") {
                     ForEach(history) { r in
                         VStack(alignment: .leading) {
                             Text("\(r.dose.formatted) · \(ScheduleText.describe(r.schedule))")
                             Text("\(r.startDate) → \(r.endDate?.description ?? "ongoing")\(r.changeReason.map { " · \($0)" } ?? "")")
-                                .font(.caption).foregroundStyle(.secondary)
+                                .font(.caption).foregroundStyle(VitalColors.textSecondary)
                         }
                     }
                 }
+                .vitalRow()
             }
             Section("Status") {
                 ForEach(SubstanceStatus.allCases.filter { $0 != s.status }, id: \.self) { st in
                     Button("Mark as \(st.displayName.lowercased())") { Task { await model.changeStatus(s, to: st) } }
                 }
             }
+            .vitalRow()
             Section {
                 Text("Research summaries and interaction screening arrive in a later update. Until then, VitalCoach makes no claims about safety or effectiveness.")
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(VitalColors.textSecondary)
             }
+            .vitalRow()
         }
+        .vitalListBackground()
         .navigationTitle(s.name)
         .sheet(isPresented: $showingChange) {
             if let r = current { ChangeRegimenView(substance: s, current: r) }
@@ -153,10 +163,13 @@ struct ChangeRegimenView: View {
                         Text("Only record changes your clinician has made or approved.").font(.footnote.weight(.semibold))
                     }
                 }
+                .vitalRow()
                 RegimenFormSection(draft: $draft)
                 Section("Reason (optional)") { TextField("e.g. Adjusted by my doctor", text: $reason) }
-                if let msg = draft.validationMessage { Section { Text(msg).foregroundStyle(.red) } }
+                .vitalRow()
+                if let msg = draft.validationMessage { Section { Text(msg).foregroundStyle(VitalColors.critical) } }
             }
+            .vitalListBackground()
             .navigationTitle("Change dose or schedule")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -209,9 +222,11 @@ struct SideEffectForm: View {
                         NoticeBanner(style: .critical, text: UrgentSymptomScreen.message)
                     }
                     Text("Recording a side effect doesn't mean the substance caused it. Share serious or persistent effects with your clinician or pharmacist.")
-                        .font(.footnote).foregroundStyle(.secondary)
+                        .font(.footnote).foregroundStyle(VitalColors.textSecondary)
                 }
+                .vitalRow()
             }
+            .vitalListBackground()
             .navigationTitle("Side effect")
             .navigationBarTitleDisplayMode(.inline)
             .onChange(of: summary) { _, text in urgent = UrgentSymptomScreen.screen(text: text).isUrgent }
@@ -257,6 +272,7 @@ struct UnscheduledDoseView: View {
                 DatePicker("Taken", selection: $takenAt, in: ...Date())
                 TextField("Note (optional)", text: $note)
             }
+            .vitalListBackground()
             .navigationTitle("Log a dose")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -16,9 +16,11 @@ struct RoutineView: View {
                                 NavigationLink { SubstanceDetailView(substanceId: s.id) } label: { SubstanceRow(substance: s) }
                             }
                         }
+                        .vitalRow()
                     }
                 }
             }
+            .vitalListBackground()
             .overlay {
                 if model.data.substances.isEmpty {
                     EmptyStateView(title: "Your routine is empty",
@@ -67,9 +69,9 @@ struct SubstanceRow: View {
             }
             if let r = regimen {
                 Text("\(r.dose.formatted) · \(r.route.displayName) · \(ScheduleText.describe(r.schedule))")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(VitalColors.textSecondary)
             } else {
-                Text(substance.category.displayName).font(.caption).foregroundStyle(.secondary)
+                Text(substance.category.displayName).font(.caption).foregroundStyle(VitalColors.textSecondary)
             }
         }
         .accessibilityElement(children: .combine)
@@ -189,6 +191,7 @@ struct RegimenFormSection: View {
         } footer: {
             Text("Units are stored as entered and never converted automatically (for example mL is not converted to mg without a confirmed concentration, and IU is never converted).")
         }
+        .vitalRow()
         Section("Schedule") {
             Picker("Frequency", selection: $draft.frequency) {
                 Text("Daily").tag(FrequencyType.daily)
@@ -217,11 +220,13 @@ struct RegimenFormSection: View {
                 Toggle("Reminders", isOn: $draft.reminders)
             }
         }
+        .vitalRow()
         Section("Dates") {
             DatePicker("Starts", selection: $draft.startDate, displayedComponents: .date)
             Toggle("Has an end date", isOn: $draft.hasEndDate)
             if draft.hasEndDate { DatePicker("Ends", selection: $draft.endDate, displayedComponents: .date) }
         }
+        .vitalRow()
     }
 }
 
@@ -233,11 +238,16 @@ struct WeekdayPicker: View {
         HStack {
             ForEach(1...7, id: \.self) { d in
                 let on = selection.contains(d)
-                Button(symbols[d - 1]) {
+                Button {
                     if on { selection.remove(d) } else { selection.insert(d) }
+                } label: {
+                    Text(symbols[d - 1])
+                        .font(.subheadline.weight(on ? .bold : .regular))
+                        .foregroundStyle(on ? VitalColors.onAccent : VitalColors.textPrimary)
+                        .frame(maxWidth: .infinity, minHeight: VitalMetrics.minTouchTarget)
+                        .background(on ? VitalColors.accentStrong : VitalColors.surfaceSecondary, in: Circle())
                 }
-                .buttonStyle(.bordered)
-                .tint(on ? Theme.accent : .gray)
+                .buttonStyle(.plain)
                 .accessibilityLabel(Calendar.current.weekdaySymbols[d - 1])
                 .accessibilityAddTraits(on ? [.isSelected] : [])
             }

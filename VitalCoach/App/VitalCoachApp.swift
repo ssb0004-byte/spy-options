@@ -7,11 +7,13 @@ struct VitalCoachApp: App {
     @State private var model = AppModel()
     @Environment(\.scenePhase) private var scenePhase
 
+    init() { Theme.applyAppearance() }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(model)
-                .tint(Theme.accent)
+                .tint(VitalColors.accent)
                 .task { await model.launch() }
                 .onChange(of: scenePhase) { _, phase in
                     guard phase == .active, model.phase == .ready else { return }
@@ -36,7 +38,14 @@ struct RootView: View {
         Group {
             switch model.phase {
             case .launching:
-                ProgressView("Loading…").accessibilityLabel("Loading your data")
+                VStack(spacing: VitalSpacing.m) {
+                    VitalLogoMark(size: 72)
+                    ProgressView().tint(VitalColors.accent)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .vitalScreenBackground()
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Loading your data")
             case .signedOut:
                 SignInView()
             case .ready:

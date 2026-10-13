@@ -15,16 +15,19 @@ struct SettingsView: View {
                     NavigationLink("Profile") { ProfileEditView() }
                     NavigationLink("Goals") { GoalsEditView() }
                     if !model.onboarding.deferredPrompts.isEmpty {
-                        Text("Optional details you skipped can be added in Profile.").font(.footnote).foregroundStyle(.secondary)
+                        Text("Optional details you skipped can be added in Profile.").font(.footnote).foregroundStyle(VitalColors.textSecondary)
                     }
                 }
+                .vitalRow()
                 Section("Preferences") {
                     NavigationLink("Units & coaching style") { PreferencesEditView() }
                     NavigationLink("Notifications") { NotificationSettingsView() }
                 }
+                .vitalRow()
                 Section("Apple Health") {
                     NavigationLink("Data sources & permissions") { HealthAccessView() }
                 }
+                .vitalRow()
                 Section("Privacy") {
                     NavigationLink("Consents") { ConsentsView() }
                     NavigationLink("Sync status") { SyncStatusView() }
@@ -33,17 +36,27 @@ struct SettingsView: View {
                         ShareLink("Share export file", item: exportURL)
                     }
                 }
+                .vitalRow()
                 Section {
                     Button(model.isLocalOnly ? "Leave device-only mode" : "Sign out") { confirmingSignOut = true }
                     Button("Delete account and all data", role: .destructive) { confirmingDelete = true }
                 } footer: {
                     Text(model.isLocalOnly ? "Device-only mode: data is stored only on this iPhone." : "Signed in with Apple.")
                 }
-                Section {
-                    Text("VitalCoach is an educational wellness app. It doesn't diagnose, treat or prescribe. Always talk with a qualified clinician about medication decisions.")
-                        .font(.footnote).foregroundStyle(.secondary)
+                .vitalRow()
+                Section("About") {
+                    VStack(alignment: .leading, spacing: VitalSpacing.xs) {
+                        VitalBrandLockup(markSize: 36, showsParentAttribution: true)
+                        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "–") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "–"))")
+                            .vitalFont(.caption).foregroundStyle(VitalColors.textSecondary)
+                    }
+                    .padding(.vertical, VitalSpacing.xxs)
+                    Text("VitalCoach is an educational wellness app. It doesn't diagnose, treat or prescribe. Always talk with a qualified clinician about medication decisions. Coaching, research and catalog content is independent and doesn't favour any company's products.")
+                        .font(.footnote).foregroundStyle(VitalColors.textSecondary)
                 }
+                .vitalRow()
             }
+            .vitalListBackground()
             .navigationTitle("Profile")
             .confirmationDialog("Sign out?", isPresented: $confirmingSignOut, titleVisibility: .visible) {
                 if !model.isLocalOnly {
@@ -94,6 +107,7 @@ struct ProfileEditView: View {
                         ForEach(ActivityLevel.allCases, id: \.self) { Text($0.displayName).tag(ActivityLevel?.some($0)) }
                     }
                 }
+                .vitalRow()
                 Section {
                     TextField("Conditions (comma-separated)", text: $conditions, axis: .vertical)
                     TextField("Allergies (comma-separated)", text: $allergies, axis: .vertical)
@@ -103,11 +117,13 @@ struct ProfileEditView: View {
                 } footer: {
                     Text("Shared only if you choose. Used later to personalise education and safety reminders.")
                 }
+                .vitalRow()
                 if hasDOB && !AgeGate.isAdult(dateOfBirth: LocalDate(dob, calendar: .current), now: Date(), calendar: .current) {
                     NoticeBanner(style: .warning, text: "VitalCoach is only for adults 18 and older.")
                 }
             }
         }
+        .vitalListBackground()
         .navigationTitle("Profile")
         .toolbar {
             Button("Save") { Task { await save() } }
@@ -146,7 +162,7 @@ struct GoalsEditView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.l) {
-                Text("Change your goals anytime. Past data isn't affected.").font(.callout).foregroundStyle(.secondary)
+                Text("Change your goals anytime. Past data isn't affected.").font(.callout).foregroundStyle(VitalColors.textSecondary)
                 GoalPicker(selected: $selected)
             }
             .padding()
@@ -175,6 +191,7 @@ struct PreferencesEditView: View {
                 }
             }
         }
+        .vitalListBackground()
         .navigationTitle("Preferences")
     }
 }
@@ -218,10 +235,12 @@ struct NotificationSettingsView: View {
                             }), displayedComponents: .hourAndMinute)
                     }
                 }
+                .vitalRow()
             }
             Text("Reminders never mark a dose as taken. Use the Taken / Skip buttons on the notification or in the app.")
-                .font(.footnote).foregroundStyle(.secondary)
+                .font(.footnote).foregroundStyle(VitalColors.textSecondary)
         }
+        .vitalListBackground()
         .navigationTitle("Notifications")
         .task { await refresh() }
     }
@@ -253,28 +272,31 @@ struct HealthAccessView: View {
                         Text(entry.kind.displayName)
                         Spacer()
                         switch status {
-                        case .receivingData: Label("Receiving data", systemImage: "checkmark.circle.fill").foregroundStyle(.green).labelStyle(.titleAndIcon).font(.caption)
-                        case .requestedNoDataYet: Text("Requested · no data yet").font(.caption).foregroundStyle(.secondary)
+                        case .receivingData: Label("Receiving data", systemImage: "checkmark.circle.fill").foregroundStyle(VitalColors.success).labelStyle(.titleAndIcon).font(.caption)
+                        case .requestedNoDataYet: Text("Requested · no data yet").font(.caption).foregroundStyle(VitalColors.textSecondary)
                         case .notRequested:
-                            Button("Connect") { Task { await model.requestHealthAccess([entry.kind]) } }.buttonStyle(.bordered)
-                        case .unavailable: Text("Unavailable").font(.caption).foregroundStyle(.secondary)
+                            Button("Connect") { Task { await model.requestHealthAccess([entry.kind]) } }.buttonStyle(VitalButtonStyle(kind: .secondary, fullWidth: false))
+                        case .unavailable: Text("Unavailable").font(.caption).foregroundStyle(VitalColors.textSecondary)
                         }
                     }
                 }
             } footer: {
                 Text("“No data yet” can mean access was declined or there's simply no data — iOS doesn't tell apps which. To change permissions: Settings → Health → Data Access & Devices → VitalCoach.")
             }
+            .vitalRow()
             Section {
                 Button(importing ? "Importing…" : "Refresh from Apple Health") {
                     importing = true
                     Task { await model.importHealthData(); importing = false }
                 }
                 .disabled(importing)
-                if let msg = model.healthImportMessage { Text(msg).font(.footnote).foregroundStyle(.secondary) }
+                if let msg = model.healthImportMessage { Text(msg).font(.footnote).foregroundStyle(VitalColors.textSecondary) }
             } footer: {
                 Text("Arboleaf scales sync to Apple Health through the Arboleaf app; VitalCoach reads them from there. Skeletal muscle mass and other scale-specific metrics that aren't in Apple Health can be entered manually.")
             }
+            .vitalRow()
         }
+        .vitalListBackground()
         .navigationTitle("Apple Health")
     }
 }
@@ -294,11 +316,14 @@ struct ConsentsView: View {
                     if type == .aiProcessing { Text("Used by the Coach tab and your morning briefing. Requires cloud backup. See exactly what's shared in Coach → What the coach can see.") }
                     if type == .cloudSync && model.isLocalOnly { Text("Sign in with Apple to enable backup.") }
                 }
+                .vitalRow()
             }
             Section("Agreed") {
                 LabeledContent(ConsentType.termsAndAge.title, value: model.data.consents.isGranted(.termsAndAge) ? "Yes" : "No")
             }
+            .vitalRow()
         }
+        .vitalListBackground()
         .navigationTitle("Consents")
     }
 }
@@ -321,13 +346,14 @@ struct SyncStatusView: View {
             } footer: {
                 Text("Everything is saved on this iPhone first and uploaded when you're online. Items that couldn't upload are kept, never discarded.")
             }
+            .vitalRow()
             if !conflicts.isEmpty {
                 Section {
                     ForEach(conflicts) { c in
                         VStack(alignment: .leading) {
                             Text(c.entity.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
                             Text("\(c.resolution.replacingOccurrences(of: "_", with: " ")) · \(c.resolvedAt.formatted(date: .abbreviated, time: .shortened))")
-                                .font(.caption).foregroundStyle(.secondary)
+                                .font(.caption).foregroundStyle(VitalColors.textSecondary)
                         }
                     }
                 } header: {
@@ -335,8 +361,10 @@ struct SyncStatusView: View {
                 } footer: {
                     Text("When the same item was changed in two places, the most recent edit was kept. The other version is preserved here and in your data export.")
                 }
+                .vitalRow()
             }
         }
+        .vitalListBackground()
         .navigationTitle("Sync")
         .task { conflicts = await model.conflicts() }
     }

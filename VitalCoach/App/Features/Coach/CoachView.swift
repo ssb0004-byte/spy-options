@@ -39,11 +39,11 @@ struct CoachGateView: View {
                     Card(title: "Allow AI coaching", systemImage: "sparkles") {
                         Text(ConsentType.aiProcessing.explanation).font(.callout)
                         Text("Only a short summary of the relevant parts of your records is sent per request: recent trends, your routine, check-in averages and memories you've approved. Never your full history. You can see exactly what's shared before agreeing.")
-                            .font(.footnote).foregroundStyle(.secondary)
+                            .font(.footnote).foregroundStyle(VitalColors.textSecondary)
                         NavigationLink("See what the coach would see") { ContextPreviewView() }
                             .font(.callout)
                         Button("Allow AI coaching") { Task { await model.setConsent(.aiProcessing, granted: true) } }
-                            .buttonStyle(.borderedProminent)
+                            .buttonStyle(VitalButtonStyle(kind: .primary, fullWidth: false))
                     }
                 }
                 Card(title: "How the coach handles your data", systemImage: "lock.shield") {
@@ -81,11 +81,13 @@ struct CoachHomeView: View {
             } header: {
                 Text("Your coach · \(model.data.preferences?.coachPersonality.displayName ?? CoachPersonality.balanced.displayName)")
             }
+            .vitalRow()
 
             if !proposals.isEmpty {
                 Section("Suggestions waiting for you") {
                     ForEach(proposals) { p in GoalProposalRow(insight: p) { await refresh() } }
                 }
+                .vitalRow()
             }
 
             if !reviews.isEmpty {
@@ -94,22 +96,23 @@ struct CoachHomeView: View {
                         Button { openedInsight = i } label: {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(i.title).foregroundStyle(.primary)
-                                Text("\(i.kind == "weekly_summary" ? "Week of" : "On") \(i.forDate)").font(.caption).foregroundStyle(.secondary)
+                                Text("\(i.kind == "weekly_summary" ? "Week of" : "On") \(i.forDate)").font(.caption).foregroundStyle(VitalColors.textSecondary)
                             }
                         }
                     }
                 }
+                .vitalRow()
             }
 
             Section("Conversations") {
                 if conversations.isEmpty {
-                    Text("No conversations yet. Ask anything about your goals, trends or routine.").font(.callout).foregroundStyle(.secondary)
+                    Text("No conversations yet. Ask anything about your goals, trends or routine.").font(.callout).foregroundStyle(VitalColors.textSecondary)
                 }
                 ForEach(conversations) { c in
                     NavigationLink { ChatView(conversationId: c.id, title: c.title) } label: {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(c.title).lineLimit(1)
-                            if let d = c.updatedAt { Text(d.formatted(.relative(presentation: .named))).font(.caption).foregroundStyle(.secondary) }
+                            if let d = c.updatedAt { Text(d.formatted(.relative(presentation: .named))).font(.caption).foregroundStyle(VitalColors.textSecondary) }
                         }
                     }
                 }
@@ -119,17 +122,21 @@ struct CoachHomeView: View {
                     Task { for id in ids { try? await model.coach?.deleteConversation(id) } }
                 }
             }
+            .vitalRow()
 
             Section("Privacy & memory") {
                 NavigationLink { MemoryView() } label: { Label("What the coach remembers", systemImage: "brain") }
                 NavigationLink { ContextPreviewView() } label: { Label("What the coach can see", systemImage: "eye") }
             }
+            .vitalRow()
 
             Section {
                 Text("Educational coaching, not medical advice. The coach never prescribes or changes doses. In an emergency, call your local emergency number.")
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(VitalColors.textSecondary)
             }
+            .vitalRow()
         }
+        .vitalListBackground()
         .navigationDestination(isPresented: $startChat) { ChatView(conversationId: nil, title: "New conversation") }
         .navigationDestination(item: $openedConversation) { c in ChatView(conversationId: c.id, title: c.title) }
         .sheet(item: $openedInsight) { i in InsightSheet(insight: i) }
@@ -206,18 +213,18 @@ struct GoalProposalRow: View {
             if let remove = insight.payload?.goalsToRemove, !remove.isEmpty {
                 Text("Remove: " + remove.map(\.displayName).joined(separator: ", ")).font(.callout)
             }
-            Text(insight.body).font(.footnote).foregroundStyle(.secondary)
+            Text(insight.body).font(.footnote).foregroundStyle(VitalColors.textSecondary)
             HStack {
                 Button("Accept") {
                     working = true
                     Task { await model.acceptGoalProposal(insight); await onChange(); working = false }
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(VitalButtonStyle(kind: .primary, fullWidth: false))
                 Button("Not now") {
                     working = true
                     Task { await model.dismissInsight(insight); await onChange(); working = false }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(VitalButtonStyle(kind: .secondary, fullWidth: false))
             }
             .disabled(working)
         }
@@ -259,10 +266,10 @@ struct BasisFooter: View {
         VStack(alignment: .leading, spacing: 4) {
             if let label = meta.basisLabel {
                 Label(label, systemImage: basis == "general_education" ? "book" : "chart.xyaxis.line")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(VitalColors.textSecondary)
             }
             if let points = dataPoints, !points.isEmpty {
-                Text("Used: " + points.joined(separator: " · ")).font(.caption2).foregroundStyle(.secondary)
+                Text("Used: " + points.joined(separator: " · ")).font(.caption2).foregroundStyle(VitalColors.textSecondary)
             }
         }
     }
@@ -293,11 +300,11 @@ struct ChatView: View {
                     LazyVStack(alignment: .leading, spacing: Theme.Spacing.m) {
                         if messages.isEmpty && !sending {
                             Text("Ask about your trends, your routine, a supplement you're curious about, or how to work toward a goal. The coach uses your synced data and will say when it doesn't know.")
-                                .font(.callout).foregroundStyle(.secondary).padding(.top)
+                                .font(.callout).foregroundStyle(VitalColors.textSecondary).padding(.top)
                         }
                         ForEach(messages) { m in MessageBubble(message: m).id(m.id) }
                         if sending {
-                            HStack { ProgressView(); Text("Thinking…").font(.callout).foregroundStyle(.secondary) }.id("typing")
+                            HStack { ProgressView(); Text("Thinking…").font(.callout).foregroundStyle(VitalColors.textSecondary) }.id("typing")
                         }
                         if let memoryNote { NoticeBanner(style: .info, text: memoryNote) }
                         if let errorText { NoticeBanner(style: .warning, text: errorText) }
@@ -384,7 +391,7 @@ struct MessageBubble: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.s) {
                 Text(message.content).textSelection(.enabled)
                 if let q = message.metadata?.followUpQuestion {
-                    Text(q).font(.callout.italic()).foregroundStyle(.secondary)
+                    Text(q).font(.callout.italic()).foregroundStyle(VitalColors.textSecondary)
                 }
                 BasisFooter(basis: message.metadata?.basis, dataPoints: message.metadata?.dataPointsUsed)
             }
@@ -415,10 +422,10 @@ struct MemoryView: View {
                     ForEach(proposed) { m in
                         VStack(alignment: .leading, spacing: 6) {
                             Text(m.content)
-                            Text(m.category.displayName).font(.caption).foregroundStyle(.secondary)
+                            Text(m.category.displayName).font(.caption).foregroundStyle(VitalColors.textSecondary)
                             HStack {
-                                Button("Remember") { Task { await update(m, status: .active) } }.buttonStyle(.borderedProminent)
-                                Button("Discard") { Task { await delete(m) } }.buttonStyle(.bordered)
+                                Button("Remember") { Task { await update(m, status: .active) } }.buttonStyle(VitalButtonStyle(kind: .primary, fullWidth: false))
+                                Button("Discard") { Task { await delete(m) } }.buttonStyle(VitalButtonStyle(kind: .secondary, fullWidth: false))
                             }
                         }
                     }
@@ -427,16 +434,17 @@ struct MemoryView: View {
                 } footer: {
                     Text("Nothing is remembered until you approve it.")
                 }
+                .vitalRow()
             }
             Section {
                 let active = memories.filter { $0.status == .active }
-                if active.isEmpty { Text("Nothing yet.").foregroundStyle(.secondary) }
+                if active.isEmpty { Text("Nothing yet.").foregroundStyle(VitalColors.textSecondary) }
                 ForEach(active) { m in
                     Button { editing = m } label: {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(m.content).foregroundStyle(.primary)
                             Text("\(m.category.displayName) · \(m.source == "coach" ? "suggested by coach" : "added by you")")
-                                .font(.caption).foregroundStyle(.secondary)
+                                .font(.caption).foregroundStyle(VitalColors.textSecondary)
                         }
                     }
                     .swipeActions { Button("Delete", role: .destructive) { Task { await delete(m) } } }
@@ -447,10 +455,13 @@ struct MemoryView: View {
             } footer: {
                 Text("These notes are included when the coach responds. Your health records themselves are never stored as memory.")
             }
+            .vitalRow()
             Section {
                 Button("Clear all memory", role: .destructive) { confirmClear = true }
             }
+            .vitalRow()
         }
+        .vitalListBackground()
         .navigationTitle("Coach memory")
         .task { await load() }
         .refreshable { await load() }
@@ -505,6 +516,7 @@ struct MemoryEditor: View {
                     }
                 }
             }
+            .vitalListBackground()
             .navigationTitle(memory == nil ? "New memory" : "Edit memory")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -534,7 +546,7 @@ struct ContextPreviewView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.m) {
                 Text("This is the exact summary sent to the AI with each request, built from your synced records. Nothing else from your history is included.")
-                    .font(.callout).foregroundStyle(.secondary)
+                    .font(.callout).foregroundStyle(VitalColors.textSecondary)
                 if let errorText { NoticeBanner(style: .warning, text: errorText) }
                 if let text {
                     Text(text).font(.system(.caption, design: .monospaced)).textSelection(.enabled)

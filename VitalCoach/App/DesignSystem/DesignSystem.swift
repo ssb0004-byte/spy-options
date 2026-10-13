@@ -1,20 +1,58 @@
 import SwiftUI
+import UIKit
 import VitalCore
 
-/// Restrained, Apple-native styling. Colors are semantic system colors so light/dark mode and
-/// Increase Contrast work automatically; spacing uses a small fixed scale.
+/// Shared building blocks used by the feature screens. Since the VitalCoach Health redesign,
+/// these keep their original APIs (so screen behaviour is unchanged) but draw with the design
+/// tokens in `DesignSystem/Theme`.
 enum Theme {
-    static let accent = Color.teal
-    static let cardBackground = Color(uiColor: .secondarySystemGroupedBackground)
-    static let pageBackground = Color(uiColor: .systemGroupedBackground)
-    static let cornerRadius: CGFloat = 16
+    static let accent = VitalColors.accent
+    static let cardBackground = VitalColors.card
+    static let pageBackground = VitalColors.background
+    static let cornerRadius: CGFloat = VitalRadii.card
 
     enum Spacing {
-        static let xs: CGFloat = 4
-        static let s: CGFloat = 8
-        static let m: CGFloat = 12
-        static let l: CGFloat = 16
-        static let xl: CGFloat = 24
+        static let xs: CGFloat = VitalSpacing.xxs
+        static let s: CGFloat = VitalSpacing.xs
+        static let m: CGFloat = VitalSpacing.s
+        static let l: CGFloat = VitalSpacing.m
+        static let xl: CGFloat = VitalSpacing.l
+    }
+
+    /// App-wide UIKit appearance (navigation bar titles, tab bar, segmented controls) so system
+    /// chrome uses the VitalCoach type colours. Called once at launch.
+    @MainActor static func applyAppearance() {
+        let nav = UINavigationBarAppearance()
+        nav.configureWithTransparentBackground()
+        nav.backgroundColor = UIColor(VitalColors.background)
+        nav.shadowColor = .clear
+        let primary = UIColor(VitalColors.textPrimary)
+        nav.titleTextAttributes = [.foregroundColor: primary, .font: UIFont.systemFont(ofSize: 17, weight: .semibold)]
+        nav.largeTitleTextAttributes = [.foregroundColor: primary, .font: UIFont.systemFont(ofSize: 32, weight: .bold)]
+        let scrolled = UINavigationBarAppearance()
+        scrolled.configureWithDefaultBackground()
+        scrolled.titleTextAttributes = nav.titleTextAttributes
+        scrolled.largeTitleTextAttributes = nav.largeTitleTextAttributes
+        UINavigationBar.appearance().standardAppearance = scrolled
+        UINavigationBar.appearance().compactAppearance = scrolled
+        UINavigationBar.appearance().scrollEdgeAppearance = nav
+
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(VitalColors.card)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(VitalColors.textSecondary)], for: .normal)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: primary], for: .selected)
+    }
+}
+
+extension View {
+    /// Brand background for `List` / `Form` screens: hides the system grouped background and
+    /// uses the VitalCoach page colour. Pair with `.vitalRow()` on sections.
+    func vitalListBackground() -> some View {
+        scrollContentBackground(.hidden).background(VitalColors.background.ignoresSafeArea())
+    }
+
+    /// Card-coloured row background for `List` / `Form` sections.
+    func vitalRow() -> some View {
+        listRowBackground(VitalColors.card)
     }
 }
 
@@ -25,19 +63,17 @@ struct Card<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+        VitalCard {
             if let title {
-                Label(title, systemImage: systemImage ?? "circle")
-                    .labelStyle(.titleAndIcon)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .accessibilityAddTraits(.isHeader)
+                Label {
+                    Text(title).vitalFont(.cardTitle).foregroundStyle(VitalColors.textPrimary)
+                } icon: {
+                    Image(systemName: systemImage ?? "circle").foregroundStyle(VitalColors.accent)
+                }
+                .accessibilityAddTraits(.isHeader)
             }
             content
         }
-        .padding(Theme.Spacing.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Theme.cardBackground, in: RoundedRectangle(cornerRadius: Theme.cornerRadius, style: .continuous))
     }
 }
 
@@ -50,15 +86,7 @@ struct EmptyStateView: View {
     var action: (() -> Void)?
 
     var body: some View {
-        ContentUnavailableView {
-            Label(title, systemImage: systemImage)
-        } description: {
-            Text(message)
-        } actions: {
-            if let actionTitle, let action {
-                Button(actionTitle, action: action).buttonStyle(.borderedProminent)
-            }
-        }
+        VitalEmptyState(title: title, message: message, systemImage: systemImage, actionTitle: actionTitle, action: action)
     }
 }
 
@@ -68,10 +96,10 @@ struct QualityBadge: View {
 
     var body: some View {
         Text(label)
-            .font(.caption2.weight(.medium))
+            .vitalFont(.caption)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(color.opacity(0.15), in: Capsule())
+            .background(color.opacity(0.12), in: Capsule())
             .foregroundStyle(color)
             .accessibilityLabel("Data quality: \(label)")
     }
@@ -87,10 +115,10 @@ struct QualityBadge: View {
 
     var color: Color {
         switch quality {
-        case .measured: .teal
-        case .estimated: .orange
-        case .selfReported: .indigo
-        case .derived: .gray
+        case .measured: VitalColors.accentStrong
+        case .estimated: VitalColors.info
+        case .selfReported: VitalColors.caution
+        case .derived: VitalColors.textSecondary
         }
     }
 }
@@ -102,13 +130,14 @@ struct MetricTile: View {
     var quality: MeasurementQuality?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-            Text(title).font(.caption).foregroundStyle(.secondary)
-            Text(value).font(.title3.weight(.semibold)).monospacedDigit()
+        VStack(alignment: .leading, spacing: VitalSpacing.xxs) {
+            Text(title).vitalFont(.caption).foregroundStyle(VitalColors.textSecondary)
+            Text(value).font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit()
+                .foregroundStyle(VitalColors.textPrimary)
                 .minimumScaleFactor(0.7).lineLimit(1)
-            HStack(spacing: Theme.Spacing.xs) {
+            HStack(spacing: VitalSpacing.xxs) {
                 if let quality { QualityBadge(quality: quality) }
-                if let detail { Text(detail).font(.caption2).foregroundStyle(.secondary).lineLimit(1) }
+                if let detail { Text(detail).vitalFont(.caption).foregroundStyle(VitalColors.textSecondary).lineLimit(1) }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -116,7 +145,7 @@ struct MetricTile: View {
     }
 }
 
-/// Inline banner for errors and notices.
+/// Inline banner for errors and notices. Icon + text, never colour alone.
 struct NoticeBanner: View {
     enum Style { case info, warning, critical }
     var style: Style
@@ -124,29 +153,30 @@ struct NoticeBanner: View {
 
     var body: some View {
         Label {
-            Text(text).font(.footnote).fixedSize(horizontal: false, vertical: true)
+            Text(text).vitalFont(.secondary).foregroundStyle(VitalColors.textPrimary)
+                .fixedSize(horizontal: false, vertical: true)
         } icon: {
             Image(systemName: icon).foregroundStyle(color)
         }
-        .padding(Theme.Spacing.m)
+        .padding(VitalSpacing.s)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: VitalRadii.control, style: .continuous))
         .accessibilityElement(children: .combine)
     }
 
     private var icon: String {
         switch style {
-        case .info: "info.circle"
-        case .warning: "exclamationmark.triangle"
-        case .critical: "cross.case"
+        case .info: "info.circle.fill"
+        case .warning: "exclamationmark.triangle.fill"
+        case .critical: "cross.case.fill"
         }
     }
 
     private var color: Color {
         switch style {
-        case .info: .blue
-        case .warning: .orange
-        case .critical: .red
+        case .info: VitalColors.info
+        case .warning: VitalColors.caution
+        case .critical: VitalColors.critical
         }
     }
 }
@@ -160,18 +190,21 @@ struct ScaleRating: View {
     @Binding var value: Int?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
-            Text(title).font(.subheadline.weight(.medium))
+        VStack(alignment: .leading, spacing: VitalSpacing.xs) {
+            Text(title).vitalFont(.body).fontWeight(.medium).foregroundStyle(VitalColors.textPrimary)
             HStack(spacing: 6) {
                 ForEach(Array(range), id: \.self) { n in
+                    let selected = value == n
                     Button {
-                        value = (value == n) ? nil : n
+                        value = selected ? nil : n
                     } label: {
                         Text("\(n)")
-                            .font(.callout.weight(value == n ? .bold : .regular))
-                            .frame(maxWidth: .infinity, minHeight: 36)
-                            .background(value == n ? Theme.accent.opacity(0.25) : Color(uiColor: .tertiarySystemFill),
-                                        in: RoundedRectangle(cornerRadius: 8))
+                            .font(.callout.weight(selected ? .bold : .regular))
+                            .monospacedDigit()
+                            .foregroundStyle(selected ? VitalColors.onAccent : VitalColors.textPrimary)
+                            .frame(maxWidth: .infinity, minHeight: VitalMetrics.minTouchTarget)
+                            .background(selected ? VitalColors.accentStrong : VitalColors.surfaceSecondary,
+                                        in: RoundedRectangle(cornerRadius: VitalRadii.small, style: .continuous))
                     }
                     .buttonStyle(.plain)
                     .accessibilityHidden(true)
@@ -180,7 +213,7 @@ struct ScaleRating: View {
             HStack {
                 Text(lowLabel); Spacer(); Text(highLabel)
             }
-            .font(.caption2).foregroundStyle(.secondary)
+            .vitalFont(.caption).foregroundStyle(VitalColors.textSecondary)
             .accessibilityHidden(true)
         }
         .accessibilityElement(children: .ignore)

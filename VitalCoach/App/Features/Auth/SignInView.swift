@@ -7,19 +7,14 @@ struct SignInView: View {
     @Environment(AppModel.self) private var model
     @State private var rawNonce = ""
     @State private var isWorking = false
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(spacing: Theme.Spacing.xl) {
             Spacer()
-            Image(systemName: "heart.text.square")
-                .font(.system(size: 64, weight: .light))
-                .foregroundStyle(Theme.accent)
-                .accessibilityHidden(true)
-            VStack(spacing: Theme.Spacing.s) {
-                Text("VitalCoach").font(.largeTitle.bold())
-                Text("Your private health tracker and coach.\nFor adults 18+. Educational, not medical advice.")
-                    .font(.body).foregroundStyle(.secondary).multilineTextAlignment(.center)
-            }
+            VitalBrandLockup(layout: .stacked, markSize: 64)
+            Text("Your private health tracker and coach.\nFor adults 18+. Educational, not medical advice.")
+                .vitalFont(.body).foregroundStyle(VitalColors.textSecondary).multilineTextAlignment(.center)
             Spacer()
             if model.backend != nil {
                 SignInWithAppleButton(.signIn) { request in
@@ -29,7 +24,7 @@ struct SignInView: View {
                 } onCompletion: { result in
                     handle(result)
                 }
-                .signInWithAppleButtonStyle(.black)
+                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                 .frame(height: 50)
                 .disabled(isWorking)
                 .accessibilityHint("Creates or opens your private VitalCoach account")
@@ -39,10 +34,13 @@ struct SignInView: View {
             Button(model.backend == nil ? "Try on this iPhone only" : "Use without an account (this iPhone only)") {
                 Task { await model.startLocalOnly() }
             }
-            .buttonStyle(.bordered)
-            if isWorking { ProgressView() }
+            .buttonStyle(VitalButtonStyle(kind: .tertiary))
+            if isWorking { ProgressView().tint(VitalColors.accent) }
+            Text("A PrecisionPeptidePens company")
+                .vitalFont(.caption).foregroundStyle(VitalColors.textSecondary)
         }
         .padding(Theme.Spacing.xl)
+        .vitalScreenBackground()
     }
 
     private func handle(_ result: Result<ASAuthorization, Error>) {
