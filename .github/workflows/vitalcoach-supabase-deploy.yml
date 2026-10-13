@@ -73,3 +73,18 @@ jobs:
           else
             echo "::warning::OPENAI_API_KEY is not set in Supabase → Edge Functions → Secrets. The coach will reply 'not set up' until it is."
           fi
+
+      - name: Smoke test deployed functions
+        run: |
+          # Each call must reach our code and be rejected for missing/invalid auth (401).
+          # A 5xx/404 here means the function failed to boot or isn't deployed.
+          base="https://${PROJECT_REF}.supabase.co/functions/v1"
+          fail=0
+          for fn in coach delete-account; do
+            for auth in "" "Bearer not-a-real-token"; do
+              code=$(curl -s -o body.json -w '%{http_code}' -X POST "$base/$fn" -H 'Content-Type: application/json' ${auth:+-H "Authorization: $auth"} -d '{"mode":"context_preview"}')
+              echo "$fn auth=${auth:+invalid}${auth:-none} -> HTTP $code $(head -c 200 body.json)"
+              [ "$code" = "401" ] || fail=1
+            done
+          done
+          exit $fail
