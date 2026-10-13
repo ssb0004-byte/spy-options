@@ -1,10 +1,13 @@
 # Supabase CLI config. Only what deployment needs; auth providers are configured in the dashboard.
 project_id = "vitalcoach"
 
-# Both functions verify the caller's token themselves (auth.getUser), which also works with
+# All functions verify the caller's token themselves (auth.getUser), which also works with
 # Supabase's newer JWT signing keys, so gateway JWT verification is turned off.
 [functions.coach]
 verify_jwt = false
 
 [functions.delete-account]
+verify_jwt = false
+
+[functions.research]
 verify_jwt = false

@@ -108,8 +108,10 @@ select pg_temp.expect_eq((select count(*) from public.user_goals where user_id =
 -- ---------- Every RLS-enabled table has policies and RLS forced ----------
 select pg_temp.expect_eq((select count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace
   where n.nspname = 'public' and c.relkind = 'r' and not (c.relrowsecurity and c.relforcerowsecurity)), 0, 'all public tables have forced RLS');
--- Every client-accessible table has at least a select policy; ai_config (server-only) has none on purpose.
+-- Every client-accessible table has at least a select policy; ai_config and research_cache
+-- (server-only) have none on purpose.
 select pg_temp.expect_eq((select count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace
-  where n.nspname = 'public' and c.relkind = 'r' and c.relname <> 'ai_config'
+  where n.nspname = 'public' and c.relkind = 'r' and c.relname not in ('ai_config', 'research_cache')
   and (select count(*) from pg_policies p where p.schemaname = 'public' and p.tablename = c.relname and p.cmd = 'SELECT') < 1), 0, 'every client table has a select policy');
 select pg_temp.expect_eq((select count(*) from pg_policies where schemaname = 'public' and tablename = 'ai_config'), 0, 'ai_config has no client policies');
+select pg_temp.expect_eq((select count(*) from pg_policies where schemaname = 'public' and tablename = 'research_cache'), 0, 'research_cache has no client policies');

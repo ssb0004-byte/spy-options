@@ -13,6 +13,7 @@ This describes what the Phase 1 code does. It is not a legal privacy policy; one
 | Session tokens | Keychain (`AfterFirstUnlockThisDeviceOnly`) | n/a |
 | HealthKit query anchors, onboarding progress, "data received" flags | UserDefaults (no health values) | No |
 | AI conversations, briefings, coach memory | Fetched on demand, not stored offline | Yes, with AI consent; written only by the server |
+| Research cards, followed topics, research alerts | Fetched on demand | Yes, with AI consent; written only by the server |
 | Progress photos, lab results | Not implemented yet | — |
 
 - **No analytics, crash-reporting, advertising or tracking SDKs** are included. The app makes network calls only to the configured Supabase project.
@@ -33,6 +34,14 @@ This describes what the Phase 1 code does. It is not a legal privacy policy; one
 - **Memory:** the coach can only *suggest* memories. They're used only after the user approves them, and can be edited, deleted or cleared at any time.
 - **Logs:** the function logs status codes only, never prompts, replies or health data.
 - **Withdrawing AI consent:** stops all further AI calls immediately. Past conversations stay visible until the user deletes them or the account.
+
+## Research (Phase 3)
+
+- **Consent:** research cards, discovery, following topics and update checks require the same *AI processing* consent as the coach (checked on the server).
+- **External research sources** (PubMed, ClinicalTrials.gov, openFDA) receive only the compound or topic name (for example "BPC-157" or "lisinopril"), sent from the server. They never receive user identifiers, questions or health values. Responses are kept in a shared server-only cache that contains no user data.
+- **AI provider:** sees the compound, the user's question, goals, complaints, pain summary, current compound names, conditions and allergies, plus the retrieved study list. `store: false` as for the coach.
+- **Stored in Supabase:** generated cards and discoveries, followed topics, and update alerts. These are RLS-scoped, written only by the server, deletable by the user, and deleted with the account (verified by `supabase/tests/40_research_test.sql`).
+- Details: `docs/PHASE3_RESEARCH.md`.
 
 ## Encryption
 

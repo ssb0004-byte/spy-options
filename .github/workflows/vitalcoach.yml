@@ -28,12 +28,16 @@ jobs:
           node-version: "22"
       - name: Coach Edge Function unit tests
         run: node --experimental-strip-types --no-warnings --test VitalCoach/supabase/functions/coach/lib/coach.test.ts
+      - name: Research Edge Function unit tests (offline fixtures)
+        run: node --experimental-strip-types --no-warnings --test VitalCoach/supabase/functions/research/lib/research.test.ts
+      - name: Research demo runs (fictional user, fixtures, stubbed model)
+        run: node --experimental-strip-types --no-warnings VitalCoach/supabase/functions/research/demo/demo.ts > /dev/null
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
       - name: Type-check Edge Functions (Deno)
         working-directory: VitalCoach/supabase/functions
-        run: deno check coach/index.ts delete-account/index.ts
+        run: deno check coach/index.ts delete-account/index.ts research/index.ts
 
   ios-app:
     name: iOS app build + tests (Simulator)

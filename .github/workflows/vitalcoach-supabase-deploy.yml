@@ -43,8 +43,10 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Coach unit tests (must pass before deploying)
-        run: node --experimental-strip-types --no-warnings --test supabase/functions/coach/lib/coach.test.ts
+      - name: Coach and research unit tests (must pass before deploying)
+        run: |
+          node --experimental-strip-types --no-warnings --test supabase/functions/coach/lib/coach.test.ts
+          node --experimental-strip-types --no-warnings --test supabase/functions/research/lib/research.test.ts
 
       - uses: supabase/setup-cli@v1
         with:
@@ -65,6 +67,7 @@ jobs:
         run: |
           supabase functions deploy coach --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
           supabase functions deploy delete-account --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
+          supabase functions deploy research --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
 
       - name: Check OpenAI key is configured
         run: |
@@ -73,6 +76,11 @@ jobs:
           else
             echo "::warning::OPENAI_API_KEY is not set in Supabase → Edge Functions → Secrets. The coach will reply 'not set up' until it is."
           fi
+          if supabase secrets list --project-ref "$PROJECT_REF" | grep -q NCBI_API_KEY; then
+            echo "NCBI_API_KEY is set (optional; raises PubMed rate limits)."
+          else
+            echo "NCBI_API_KEY not set (optional). Research works without it at PubMed's lower rate limit."
+          fi
 
       - name: Smoke test deployed functions
         run: |
@@ -80,7 +88,7 @@ jobs:
           # A 5xx/404 here means the function failed to boot or isn't deployed.
           base="https://${PROJECT_REF}.supabase.co/functions/v1"
           fail=0
-          for fn in coach delete-account; do
+          for fn in coach delete-account research; do
             for auth in "" "Bearer not-a-real-token"; do
               code=$(curl -s -o body.json -w '%{http_code}' -X POST "$base/$fn" -H 'Content-Type: application/json' ${auth:+-H "Authorization: $auth"} -d '{"mode":"context_preview"}')
               echo "$fn auth=${auth:+invalid}${auth:-none} -> HTTP $code $(head -c 200 body.json)"

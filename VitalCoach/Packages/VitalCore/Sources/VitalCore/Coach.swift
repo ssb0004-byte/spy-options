@@ -29,6 +29,9 @@ public struct CoachMetadata: Codable, Sendable, Equatable {
     public var safety: CoachSafety?
     public var guardApplied: [String]?
     public var source: String?
+    /// Compounds/interventions the user asked about; the app can offer a Research card for each
+    /// (ResearchClient.insightCard). Empty or nil when none.
+    public var researchTopics: [String]?
 
     public init() {}
 

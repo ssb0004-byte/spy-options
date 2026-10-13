@@ -4,7 +4,7 @@ import { buildContext, type CoachContext, type Rows } from "./context.ts";
 import { checkBudget, estimateTokens, monthStart, weekStart, type UsageSnapshot } from "./budget.ts";
 import { buildRequest, ProviderError, type ChatTurn, type ModelConfig, type ModelResult } from "./openai.ts";
 import { dataBlock, instructions, parseOutput, type Mode } from "./prompt.ts";
-import { guardReply, sanitizeUserText, screenUrgent, URGENT_MESSAGE } from "./safety.ts";
+import { guardReply, sanitizeUserText, screenRedFlags, screenUrgent, URGENT_MESSAGE } from "./safety.ts";
 
 export type RequestMode = Mode | "context_preview";
 
@@ -87,14 +87,19 @@ export async function handle(req: CoachRequest, userId: string, deps: Deps): Pro
     if (cached) return { status: 200, body: { insight: cached, cached: true } };
   }
 
-  // 3. Deterministic emergency screen before any model call.
-  if (message && screenUrgent(message).urgent) {
+  // 3. Deterministic emergency screen and red-flag triage before any model call.
+  const triage = message ? screenRedFlags(message) : null;
+  const urgentPhrase = message ? screenUrgent(message).urgent : false;
+  if (message && triage && (urgentPhrase || triage.stop)) {
+    const emergency = urgentPhrase || triage.level === "emergency";
     const convId = await deps.db.conversation(userId, req.conversation_id, "chat", message.slice(0, 60));
     await deps.db.saveMessage(userId, { conversation_id: convId, role: "user", content: message, metadata: {} });
+    // Emergency phrases keep the established wording; other red flags get the triage advice.
     const notice = await deps.db.saveMessage(userId, {
-      conversation_id: convId, role: "system_notice", content: URGENT_MESSAGE, metadata: { safety: { urgent: true }, source: "deterministic_screen" },
+      conversation_id: convId, role: "system_notice", content: urgentPhrase ? URGENT_MESSAGE : triage.message,
+      metadata: { safety: { urgent: emergency, red_flags: triage.flags.map((f) => f.id) }, source: "deterministic_screen" },
     });
-    return { status: 200, body: { conversation_id: convId, message: notice, urgent: true } };
+    return { status: 200, body: { conversation_id: convId, message: notice, urgent: emergency, triage } };
   }
 
   // 4. Budgets.
@@ -132,9 +137,13 @@ export async function handle(req: CoachRequest, userId: string, deps: Deps): Pro
 
   // 6. Deterministic output guard.
   const guarded = guardReply(out.reply, out.safety);
+  if (triage && triage.level === "see_clinician") {
+    guarded.text = `${triage.message}\n\n${guarded.text}`;
+    guarded.guardApplied.push("red_flag_notice");
+  }
   const metadata = {
     basis: out.basis, data_points_used: out.data_points_used, follow_up_question: out.follow_up_question,
-    safety: out.safety, guard_applied: guarded.guardApplied,
+    safety: out.safety, guard_applied: guarded.guardApplied, research_topics: out.research_topics,
   };
   const extra = { model: cfg.chat_model, prompt_version: cfg.prompt_version, input_tokens: result.inputTokens, output_tokens: result.outputTokens };
 

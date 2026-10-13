@@ -279,3 +279,26 @@ test("unreadable model output is rejected, not shown", async () => {
   const r = await handle({ mode: "chat", message: "hi" }, "u1", { db, model: async () => ({ text: "garbage", inputTokens: 1, outputTokens: 1, status: "completed" }), now });
   assert.equal(r.status, 502);
 });
+
+// ---------- Phase 3: red-flag triage and stricter dosing guard ----------
+test("chat red flags (e.g. can't bear weight) return triage advice without calling the model", async () => {
+  const { db, state } = fakeDb();
+  const m = modelReturning({ reply: "x" });
+  const r = await handle({ mode: "chat", message: "My knee gave way and now I can't put weight on it. Is BPC-157 worth trying?" }, "u1", { db, model: m.fn, now });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.urgent, false);
+  assert.equal((r.body.triage as any).level, "urgent");
+  assert.equal(m.calls.length, 0);
+  assert.equal(state.messages.at(-1)!.role, "system_notice");
+  assert.match(state.messages.at(-1)!.content, /assessed today/);
+});
+
+test("peptide replies have dosing protocols removed, not just annotated; research topics are parsed", async () => {
+  const g = guardReply("BPC-157 is investigational. People inject 250 mcg twice daily for 4 weeks. Talk to your doctor.", { urgent: false, needs_clinician: false, topics: ["peptide"] });
+  assert.doesNotMatch(g.text, /250 mcg/);
+  assert.match(g.text, /investigational/);
+  assert.ok(g.guardApplied.includes("dose_protocol_removed"));
+  assert.ok(g.text.endsWith(CLINICIAN_NOTICE));
+  const o = parseOutput(JSON.stringify({ reply: "Hi", research_topics: ["BPC-157", "", 3] }))!;
+  assert.deepEqual(o.research_topics, ["BPC-157"]);
+});

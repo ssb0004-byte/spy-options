@@ -1,0 +1,131 @@
+
+==============================================================================
+VitalCoach research demo — FICTIONAL user and FIXTURE data (not real studies)
+==============================================================================
+User: Alex Rivera (fictional), 42. Right-knee pain after running (logged 4–5/10).
+Goals: reduce knee pain, improve body composition. Takes: lisinopril (Rx), vitamin D3.
+Condition: hypertension. Research interest: BPC-157.
+Run time (fixed): 2026-10-14T12:00:00.000Z
+
+==============================================================================
+1) Triage first: "I twisted my knee, heard a pop, now I can't bear weight. Should I try BPC-157?"
+==============================================================================
+stopped: true   level: urgent   flags: cant_bear_weight, pop_and_swelling
+  You mentioned being unable to bear weight or walk; a 'pop' at the time of injury or rapid
+  swelling. Together with pain, this can be a sign of an injury or condition that needs an
+  in-person examination soon (for example a fracture, a ligament or cartilage tear, a nerve
+  problem, a clot or a joint infection). Please get assessed today — urgent care, an emergency
+  department, or your clinician — and avoid loading the area until then. I'm not going to
+  discuss compounds or supplements for this until you've been checked, because they could delay
+  the care you need. If symptoms are severe or getting worse quickly, call your local emergency
+  number.
+Research API calls made: 0   (compound discussion stopped before any lookup or AI call)
+
+==============================================================================
+2) Compound Insight Card: BPC-157 ("Could BPC-157 help my knee pain from running?")
+==============================================================================
+(followed interest: BPC-157)
+Name: BPC-157    Category: peptide_investigational
+Human evidence: Preliminary human evidence  [model claimed: established_human; capped: true]
+  Meaning: Only small, uncontrolled or observational human studies, case reports or unpublished
+  trial results. These can suggest an effect but cannot show that it works.
+  Cap: Claimed "Established human evidence", but the verified citations support at most
+  "Preliminary human evidence" (1 non-randomized/observational human study or posted trial
+  results).
+Mechanism:
+  A synthetic 15-amino-acid peptide fragment. In animal and cell studies it has been linked to
+  blood-vessel growth and tendon cell activity; how (or whether) this applies in people is
+  unknown.
+Studied applications:
+  - Tendon and ligament healing: Animal studies only (capped from established_human)
+      Rodent studies and a systematic review of rodent studies report faster tendon healing.
+      cites: pubmed:90000001, pubmed:90000004
+  - Knee pain: Preliminary human evidence
+      One small retrospective case series without a control group reported less pain.
+      cites: pubmed:90000005
+Preclinical findings:
+  In rats, tendon and ligament injuries healed faster; lab studies show increased tendon
+  fibroblast outgrowth.
+Anecdotal reports — Unverified anecdotal reports — not evidence of effectiveness or safety (verified: false):
+  Online communities report reduced joint pain.
+  Biases: Placebo effect; Selection and reporting bias; Survivorship bias; Product contamination and purity; Conflicts of interest; Natural recovery and co-interventions
+Risks & unknowns:
+  - No controlled human safety data; long-term effects are unknown.
+  - Products sold as 'research chemicals' may be mislabeled or contaminated.
+Regulatory status: no_label_found
+  No FDA drug label was found in openFDA (checked 2026-10-14). This usually means it is not an
+  FDA-approved drug — for example investigational peptides, compounded preparations and dietary
+  supplements (which FDA does not approve) — but absence from this database is not proof.
+  WADA: unknown — Not checked automatically. Competitive athletes should check the current WADA
+  Prohibited List (wada-ama.org) or Global DRO.
+Contraindications & interactions (cross-checked against current compounds/conditions):
+  - [no_data / unknown] Lisinopril, Vitamin D3: No FDA label was found for BPC-157, so there is
+  no official interaction information with your current compounds. Missing data is not evidence
+  of safety — ask a pharmacist or clinician to review the combination. (source: no_data)
+Compared with established approaches:
+  - Exercise therapy / physical therapy (non_drug): Strengthening (quadriceps, hips) and graded
+  return to running are first-line in clinical guidelines for most non-traumatic knee pain.
+  - Weight management (non_drug): When relevant, reducing body weight lowers knee joint load;
+  guidelines recommend it for knee osteoarthritis.
+  - Training-load changes (non_drug): Temporarily reducing running volume or intensity, then
+  building back gradually.
+  - OTC pain relievers used per their label (otc): Topical NSAIDs, oral NSAIDs or acetaminophen,
+  following the label and checking interactions (e.g. NSAIDs with blood-pressure medicines).
+  - Clinician evaluation (clinician): A clinician or physical therapist can identify the cause
+  (e.g. patellofemoral pain, meniscus or ligament injury) and tailor treatment.
+  For knee pain after running, exercise therapy, load management and weight management have much
+  stronger human evidence than BPC-157.
+Personalized note:
+  Because you take lisinopril, review any new compound with your prescriber.
+Dosing: Dosing information is intentionally not provided. Dose, frequency and duration decisions for any compound — especially investigational peptides — need a licensed clinician who knows your history and current medications.
+Citations (verified against retrieved set; retrieved 2026-10-14T12:00:00.000Z):
+  - [pubmed:90000001] [FIXTURE] Pentadecapeptide BPC 157 accelerates Achilles tendon healing in
+  rats (2019) — animal — https://pubmed.ncbi.nlm.nih.gov/90000001/
+  - [pubmed:90000004] [FIXTURE] Systematic review of BPC 157 in rodent models of tendon and
+  ligament injury (2023) — animal — https://pubmed.ncbi.nlm.nih.gov/90000004/
+  - [pubmed:90000005] [FIXTURE] Intra-articular BPC 157 for knee pain: a retrospective case
+  series of 12 patients (2022) — case_report — https://pubmed.ncbi.nlm.nih.gov/90000005/
+Dropped (not in retrieved set): 99999999, PMID: 12345678
+Server guards applied: dosing_removed, invented_citations_dropped, evidence_capped, safety_claim_removed
+Sources checked: pubmed=ok, clinicaltrials=ok, fda_label=ok (no label found)
+Last verified: 2026-10-14T12:00:00.000Z
+  Educational summary of published research, not medical advice. It may be incomplete or out of
+  date. Talk with your clinician or pharmacist before starting, stopping or combining any
+  compound.
+
+==============================================================================
+3) Proactive discovery (goals + pain log + routine + followed interests)
+==============================================================================
+  For knee pain after running and body-composition goals, exercise-based options have the
+  strongest evidence.
+- Exercise therapy / physical therapy for knee pain  [non_drug]  Established human evidence
+      why: You logged right-knee pain and want less pain.
+      cautions: Start gradually; a physical therapist can tailor it.
+      cites: pubmed:92000001, pubmed:92000002
+- Topical NSAIDs (e.g. diclofenac gel)  [otc]  Established human evidence
+      why: Topical NSAIDs act locally with lower whole-body exposure.
+      cautions: Use per label; you take lisinopril — ask a pharmacist.
+      interaction: Lisinopril — The FDA label for Topical NSAIDs (e.g. diclofenac gel) mentions
+      this in its drug interactions section: "[FIXTURE] Concomitant use with oral NSAIDs, ACE
+      inhibitors and anticoagulants: see full label."
+      interaction: Lisinopril — NSAIDs can blunt the blood-pressure-lowering effect of ACE
+      inhibitors, ARBs and diuretics and, combined, raise the risk of kidney injury (especially
+      with dehydration or hard endurance exercise).
+      interaction: hypertension — NSAIDs can raise blood pressure.
+      cites: pubmed:94000001
+- Resistance training during weight loss  [non_drug]  Established human evidence
+      why: Supports body composition while losing fat.
+      cites: pubmed:96000001
+- BPC-157  [followed_interest]  Preliminary human evidence (capped from moderate_human)
+      why: You follow BPC-157.
+      cautions: Investigational; not FDA-approved.
+      cites: pubmed:90000001, pubmed:90000005
+Additional topics to research: Sleep and pain ("sleep chronic pain")
+Guards: dosing_removed, evidence_capped
+
+==============================================================================
+4) Privacy: every outbound research URL in this run
+==============================================================================
+44 requests: eutils.ncbi.nlm.nih.gov ×32, clinicaltrials.gov ×8, api.fda.gov ×4
+Terms sent: BPC-157 | (PubMed summary by IDs) | Lisinopril | exercise therapy knee pain | weight loss knee osteoarthritis pain | patellofemoral pain runners exercise | exercise therapy chronic pain | topical diclofenac knee | semaglutide weight loss | resistance training body composition weight loss
+Contains user id / name / health values: no

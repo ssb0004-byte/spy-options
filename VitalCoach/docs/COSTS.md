@@ -34,6 +34,13 @@ Prices change often. The figures below are planning estimates as of this writing
   - Plus the monthly budget set in the OpenAI dashboard.
 - **Briefings** are cached once per day and weekly reviews once per week, so reopening them costs nothing.
 
+## Phase 3 as built (research)
+
+- **Research APIs:** PubMed E-utilities, ClinicalTrials.gov and openFDA are free. Responses are cached in a shared table for 7 days, so repeated lookups of the same compound cost no API calls. An optional free `NCBI_API_KEY` raises PubMed's rate limit; it is not required.
+- **AI:** one model call per Compound Insight Card and one per discovery run, using the same `ai_config` model and the same per-user/global budgets as the coach. Cards are cached for 7 days per user and context, discovery for 1 day. Roughly 5–12k tokens per call, i.e. a fraction of a cent on a low-cost model.
+- **Update checks** (`check_updates`) make no AI calls.
+- No new paid services.
+
 ## Growth
 
 | Active users | Likely setup | Order of magnitude |
