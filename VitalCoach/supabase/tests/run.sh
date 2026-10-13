@@ -25,6 +25,10 @@ echo "== Migrations + RLS/behaviour tests"
 createdb_and_migrate vc_rls
 "${PSQL[@]}" -o /dev/null -d vc_rls -f "$HERE/10_rls_and_behaviour_test.sql" 2>&1 | sed 's/^psql:[^ ]* NOTICE:  /  /'
 
+echo "== Coach (Phase 2) RLS tests"
+createdb_and_migrate vc_coach
+"${PSQL[@]}" -o /dev/null -d vc_coach -f "$HERE/30_coach_test.sql" 2>&1 | sed 's/^psql:[^ ]* NOTICE:  /  /'
+
 echo "== Swift ⇄ Postgres schema round-trip"
 FIX="$WORK/fixtures"; mkdir -p "$FIX" "$WORK/rows"; chmod 777 "$FIX" "$WORK/rows"
 docker run --rm -v "$ROOT/Packages/VitalCore:/pkg" -v vitalcore-build:/pkg/.build -v "$FIX:/fixtures" \
