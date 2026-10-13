@@ -50,7 +50,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.120.0   # pinned: resolving "latest" hits the GitHub API rate limit
 
       - name: Link project
         run: supabase link --project-ref "$PROJECT_REF" -p "$SUPABASE_DB_PASSWORD"
