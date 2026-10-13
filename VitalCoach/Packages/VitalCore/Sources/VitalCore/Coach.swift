@@ -65,6 +65,10 @@ public struct CoachConversation: Codable, Sendable, Hashable, Identifiable {
     public var title: String
     public var kind: String
     public var updatedAt: Date?
+
+    public init(id: UUID, title: String, kind: String, updatedAt: Date?) {
+        self.id = id; self.title = title; self.kind = kind; self.updatedAt = updatedAt
+    }
 }
 
 public struct CoachMemory: Codable, Sendable, Equatable, Identifiable {
