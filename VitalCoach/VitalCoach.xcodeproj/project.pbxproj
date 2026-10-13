@@ -10,26 +10,41 @@
 		0E4CD5F70C87FAAAE9CD0B0F /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478A1C8A0F0FAB7526190360 /* HealthKitService.swift */; };
 		25B68E1E60DFB08C3E1F53C7 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CF64B37A9007ABF65B48E2 /* AppModel.swift */; };
 		2E913FD6A6B7FCABBD49CF5E /* VitalCore in Frameworks */ = {isa = PBXBuildFile; productRef = 55C7480F1710E931F4B7B562 /* VitalCore */; };
+		37674396CE21A056168AA8A1 /* DashboardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1228ACCA2086050C05095623 /* DashboardPreview.swift */; };
 		3FF6875D92595A2E85E1F2B5 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E01F5ACC4AA68E59A05D7D /* SignInView.swift */; };
+		4841E9A10C3FF3A24D2E5F55 /* VitalStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04823E74FB310118E83AC61C /* VitalStatusIndicator.swift */; };
 		4D05D987F635E0EC957A4822 /* AppModel+Coach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3384D82CCF39ED0A82F374C8 /* AppModel+Coach.swift */; };
+		532C68EB98B2BAF67E3A0D13 /* VitalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399FE72975D372AD0E656CFB /* VitalButton.swift */; };
+		630A80C82CDF9145EAB872C5 /* VitalStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A07E6D41661913D6B74756A /* VitalStates.swift */; };
 		643E00A600C3D16E69B7C7A8 /* VitalCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2393B4094610CE4C573C4E85 /* VitalCore */; };
 		6F2E0C28A2A84785B3DAACF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB6D40A52226CC4C46CC524E /* Assets.xcassets */; };
+		713F475895A6F59B6E022995 /* VitalTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F26B2E8A14D7FF13189EB7 /* VitalTheme.swift */; };
 		7670941BBD74328C593AEDDC /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */; };
+		771A9204B1B9909C885E51C4 /* VitalSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3F3AFE13FEADF6D75EA289 /* VitalSectionHeader.swift */; };
+		797BD0FCBD52764FE076718C /* VitalTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2784FFF847D089321D196200 /* VitalTextField.swift */; };
 		7F86729395F73A885C2BC6B0 /* VitalCoachApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */; };
 		80AB1F5D4FEB747F76ED165F /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8CC002A4B7E5F791904458 /* DesignSystem.swift */; };
 		8B2710BD32893C9C8BFFD6E9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3C1BD570409275858AAB4242 /* PrivacyInfo.xcprivacy */; };
 		9C8946BE85737C46BC571EBC /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171905C2C02FCABDFF22D8ED /* HealthKit.framework */; };
+		A62A23474C29B7A57690EB51 /* VitalMetricCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577B6700D014FAEEB7101153 /* VitalMetricCard.swift */; };
+		A7A626C405B6962B49488F0D /* VitalLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F58A51354AD9B2B94A9D333 /* VitalLogo.swift */; };
+		B4D96A1E9698CA827A6556D3 /* VitalTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA9A0986CF661C9DA4242E5 /* VitalTypography.swift */; };
 		B90B1CFF07924A05FF5E16A0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C986707F351BD5FFFAB30F14 /* Persistence.swift */; };
+		B95D70B7F66E5D8E63E56613 /* VitalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E46DCBFB33BC7D79E802B29 /* VitalCard.swift */; };
 		BBD41CC17530661DA2260DED /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CB71975999622357411D03 /* SettingsView.swift */; };
 		BC1D2910D1D3A30A4B626A7B /* SubstanceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3A432700738C064EC44E4D /* SubstanceDetailView.swift */; };
 		C3A816B39BF37EA9468E9F7F /* DoseLogSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB010309C4AC84FD61E68993 /* DoseLogSheet.swift */; };
 		C40C5243FED1D4B237A42B38 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADC5BD23DE78016C4493C67 /* NotificationService.swift */; };
 		C64D4B1BA38CE4D524EA9A1E /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A98F83A26C9A9E93DA3236 /* CheckInView.swift */; };
 		CAE02AFB57CC95C4CE53BE20 /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B851BDC553135DF6682EBC73 /* CoachView.swift */; };
+		CBDF8DBA6AADBD243DC32468 /* AddSubstanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189512646F9D1DDED8BA5664 /* AddSubstanceView.swift */; };
 		D1626636BF49C7DDE0AB9A11 /* SwiftDataRecordStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5B9FC0B8BE75FB007B9F02 /* SwiftDataRecordStoreTests.swift */; };
 		DE322349421CD56FAE630BD5 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336DA8B3C4946602E4C892B /* TrendsView.swift */; };
 		E82E19ECD71116AC810CD37B /* RoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BFBA74ED70B2378D208348 /* RoutineView.swift */; };
+		F04D80F3EF625FFD176838A9 /* VitalColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796297C6935408C647BDB34F /* VitalColors.swift */; };
+		F95BE63FDEF56AAA4B7228FD /* VitalSubstanceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC10BE46E0616A146624C3D8 /* VitalSubstanceRow.swift */; };
 		FC87B0A04C7F7245DD973AB3 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A47B07C7B476412F92E306C /* HomeView.swift */; };
+		FD1FE0959193AF6484298ABC /* VitalInsightCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B22D13D21024CEBB00E8EF /* VitalInsightCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,19 +59,32 @@
 
 /* Begin PBXFileReference section */
 		03E1D3C9FD98ACF677F930AA /* VitalCoach.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VitalCoach.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04823E74FB310118E83AC61C /* VitalStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalStatusIndicator.swift; sourceTree = "<group>"; };
 		0AE25F5DF34015012FFECD26 /* VitalCoachApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalCoachApp.swift; sourceTree = "<group>"; };
+		0CA9A0986CF661C9DA4242E5 /* VitalTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalTypography.swift; sourceTree = "<group>"; };
+		1228ACCA2086050C05095623 /* DashboardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardPreview.swift; sourceTree = "<group>"; };
 		171905C2C02FCABDFF22D8ED /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		189512646F9D1DDED8BA5664 /* AddSubstanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubstanceView.swift; sourceTree = "<group>"; };
+		1A07E6D41661913D6B74756A /* VitalStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalStates.swift; sourceTree = "<group>"; };
+		2784FFF847D089321D196200 /* VitalTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalTextField.swift; sourceTree = "<group>"; };
 		290E9775FCA3E82FF2A8D01A /* VitalCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VitalCore; path = Packages/VitalCore; sourceTree = SOURCE_ROOT; };
 		3384D82CCF39ED0A82F374C8 /* AppModel+Coach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppModel+Coach.swift"; sourceTree = "<group>"; };
+		399FE72975D372AD0E656CFB /* VitalButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalButton.swift; sourceTree = "<group>"; };
 		3C1BD570409275858AAB4242 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3E46DCBFB33BC7D79E802B29 /* VitalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalCard.swift; sourceTree = "<group>"; };
+		3F58A51354AD9B2B94A9D333 /* VitalLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalLogo.swift; sourceTree = "<group>"; };
 		478A1C8A0F0FAB7526190360 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
 		4A6EAD3CFF9AB1D4C66DA6A7 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		51F26B2E8A14D7FF13189EB7 /* VitalTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalTheme.swift; sourceTree = "<group>"; };
+		577B6700D014FAEEB7101153 /* VitalMetricCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalMetricCard.swift; sourceTree = "<group>"; };
 		6ADC5BD23DE78016C4493C67 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		76CF64B37A9007ABF65B48E2 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		796297C6935408C647BDB34F /* VitalColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalColors.swift; sourceTree = "<group>"; };
 		8A5B9FC0B8BE75FB007B9F02 /* SwiftDataRecordStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataRecordStoreTests.swift; sourceTree = "<group>"; };
 		8C8CC002A4B7E5F791904458 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		9792A6A7D881DD5EF370222D /* VitalCoachTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VitalCoachTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A47B07C7B476412F92E306C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		9F3F3AFE13FEADF6D75EA289 /* VitalSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalSectionHeader.swift; sourceTree = "<group>"; };
 		A336DA8B3C4946602E4C892B /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
 		B1CB71975999622357411D03 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B1E01F5ACC4AA68E59A05D7D /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
@@ -64,9 +92,11 @@
 		B851BDC553135DF6682EBC73 /* CoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachView.swift; sourceTree = "<group>"; };
 		BB010309C4AC84FD61E68993 /* DoseLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoseLogSheet.swift; sourceTree = "<group>"; };
 		BD3A432700738C064EC44E4D /* SubstanceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstanceDetailView.swift; sourceTree = "<group>"; };
+		C8B22D13D21024CEBB00E8EF /* VitalInsightCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalInsightCard.swift; sourceTree = "<group>"; };
 		C986707F351BD5FFFAB30F14 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		CA4BA4D999B1D16171174D6C /* VitalCoach.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VitalCoach.entitlements; sourceTree = "<group>"; };
 		DB6D40A52226CC4C46CC524E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DC10BE46E0616A146624C3D8 /* VitalSubstanceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalSubstanceRow.swift; sourceTree = "<group>"; };
 		F0BFBA74ED70B2378D208348 /* RoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineView.swift; sourceTree = "<group>"; };
 		F53888C0B362D474A59281B7 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
 		F6359E117E849CA7C972C24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -99,6 +129,16 @@
 				B851BDC553135DF6682EBC73 /* CoachView.swift */,
 			);
 			path = Coach;
+			sourceTree = "<group>";
+		};
+		0F6C7FB3E6B3E7CE03E36A65 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				796297C6935408C647BDB34F /* VitalColors.swift */,
+				51F26B2E8A14D7FF13189EB7 /* VitalTheme.swift */,
+				0CA9A0986CF661C9DA4242E5 /* VitalTypography.swift */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 		12757E7D74E666E7AAA8B535 /* Home */ = {
@@ -138,6 +178,22 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		41A68EA284EAA9892873D1BB /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				399FE72975D372AD0E656CFB /* VitalButton.swift */,
+				3E46DCBFB33BC7D79E802B29 /* VitalCard.swift */,
+				C8B22D13D21024CEBB00E8EF /* VitalInsightCard.swift */,
+				577B6700D014FAEEB7101153 /* VitalMetricCard.swift */,
+				9F3F3AFE13FEADF6D75EA289 /* VitalSectionHeader.swift */,
+				1A07E6D41661913D6B74756A /* VitalStates.swift */,
+				04823E74FB310118E83AC61C /* VitalStatusIndicator.swift */,
+				DC10BE46E0616A146624C3D8 /* VitalSubstanceRow.swift */,
+				2784FFF847D089321D196200 /* VitalTextField.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		46F4BD54EEA9D90FC029FDBF /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +216,22 @@
 				A336DA8B3C4946602E4C892B /* TrendsView.swift */,
 			);
 			path = Trends;
+			sourceTree = "<group>";
+		};
+		5188D35DE3C76B12D6D5E7DC /* Brand */ = {
+			isa = PBXGroup;
+			children = (
+				3F58A51354AD9B2B94A9D333 /* VitalLogo.swift */,
+			);
+			path = Brand;
+			sourceTree = "<group>";
+		};
+		77AE30FEE064DD03078A6379 /* Previews */ = {
+			isa = PBXGroup;
+			children = (
+				1228ACCA2086050C05095623 /* DashboardPreview.swift */,
+			);
+			path = Previews;
 			sourceTree = "<group>";
 		};
 		9FE2E6A1F40385637736094F = {
@@ -207,6 +279,7 @@
 		B66BFC76E475CB426F93AD69 /* Routine */ = {
 			isa = PBXGroup;
 			children = (
+				189512646F9D1DDED8BA5664 /* AddSubstanceView.swift */,
 				BB010309C4AC84FD61E68993 /* DoseLogSheet.swift */,
 				F0BFBA74ED70B2378D208348 /* RoutineView.swift */,
 				BD3A432700738C064EC44E4D /* SubstanceDetailView.swift */,
@@ -251,6 +324,10 @@
 			isa = PBXGroup;
 			children = (
 				8C8CC002A4B7E5F791904458 /* DesignSystem.swift */,
+				5188D35DE3C76B12D6D5E7DC /* Brand */,
+				41A68EA284EAA9892873D1BB /* Components */,
+				77AE30FEE064DD03078A6379 /* Previews */,
+				0F6C7FB3E6B3E7CE03E36A65 /* Theme */,
 			);
 			path = DesignSystem;
 			sourceTree = "<group>";
@@ -368,10 +445,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBDF8DBA6AADBD243DC32468 /* AddSubstanceView.swift in Sources */,
 				4D05D987F635E0EC957A4822 /* AppModel+Coach.swift in Sources */,
 				25B68E1E60DFB08C3E1F53C7 /* AppModel.swift in Sources */,
 				C64D4B1BA38CE4D524EA9A1E /* CheckInView.swift in Sources */,
 				CAE02AFB57CC95C4CE53BE20 /* CoachView.swift in Sources */,
+				37674396CE21A056168AA8A1 /* DashboardPreview.swift in Sources */,
 				80AB1F5D4FEB747F76ED165F /* DesignSystem.swift in Sources */,
 				C3A816B39BF37EA9468E9F7F /* DoseLogSheet.swift in Sources */,
 				0E4CD5F70C87FAAAE9CD0B0F /* HealthKitService.swift in Sources */,
@@ -384,7 +463,20 @@
 				3FF6875D92595A2E85E1F2B5 /* SignInView.swift in Sources */,
 				BC1D2910D1D3A30A4B626A7B /* SubstanceDetailView.swift in Sources */,
 				DE322349421CD56FAE630BD5 /* TrendsView.swift in Sources */,
+				532C68EB98B2BAF67E3A0D13 /* VitalButton.swift in Sources */,
+				B95D70B7F66E5D8E63E56613 /* VitalCard.swift in Sources */,
 				7F86729395F73A885C2BC6B0 /* VitalCoachApp.swift in Sources */,
+				F04D80F3EF625FFD176838A9 /* VitalColors.swift in Sources */,
+				FD1FE0959193AF6484298ABC /* VitalInsightCard.swift in Sources */,
+				A7A626C405B6962B49488F0D /* VitalLogo.swift in Sources */,
+				A62A23474C29B7A57690EB51 /* VitalMetricCard.swift in Sources */,
+				771A9204B1B9909C885E51C4 /* VitalSectionHeader.swift in Sources */,
+				630A80C82CDF9145EAB872C5 /* VitalStates.swift in Sources */,
+				4841E9A10C3FF3A24D2E5F55 /* VitalStatusIndicator.swift in Sources */,
+				F95BE63FDEF56AAA4B7228FD /* VitalSubstanceRow.swift in Sources */,
+				797BD0FCBD52764FE076718C /* VitalTextField.swift in Sources */,
+				713F475895A6F59B6E022995 /* VitalTheme.swift in Sources */,
+				B4D96A1E9698CA827A6556D3 /* VitalTypography.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

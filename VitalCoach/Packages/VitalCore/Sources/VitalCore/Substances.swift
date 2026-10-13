@@ -131,6 +131,9 @@ public struct UserSubstance: SyncableRecord {
     public var status: SubstanceStatus
     public var isPrescribed: Bool
     public var notes: String?
+    /// Where the name came from: "catalog:<entry id>@<catalog version>" for a verified catalog
+    /// entry, "custom:<uuid>" for a user-created name, nil for routines added before search existed.
+    public var catalogRef: String?
     public var createdAt: Date
     public var clientUpdatedAt: Date
     public var version: Int
@@ -138,16 +141,19 @@ public struct UserSubstance: SyncableRecord {
 
     public init(id: UUID = UUID(), userId: UUID, name: String, aliases: [String] = [], category: SubstanceCategory,
                 formulation: String? = nil, indication: String? = nil, status: SubstanceStatus = .active,
-                isPrescribed: Bool = false, notes: String? = nil, createdAt: Date = Date(),
+                isPrescribed: Bool = false, notes: String? = nil, catalogRef: String? = nil, createdAt: Date = Date(),
                 clientUpdatedAt: Date = Date(), version: Int = 0, deletedAt: Date? = nil) {
         self.id = id; self.userId = userId; self.name = name; self.aliases = aliases; self.category = category
         self.formulation = formulation; self.indication = indication; self.status = status
-        self.isPrescribed = isPrescribed; self.notes = notes; self.createdAt = createdAt
+        self.isPrescribed = isPrescribed; self.notes = notes; self.catalogRef = catalogRef; self.createdAt = createdAt
         self.clientUpdatedAt = clientUpdatedAt; self.version = version; self.deletedAt = deletedAt
     }
 
     public var sortDate: Date { createdAt }
     public var indexTag: String? { status.rawValue }
+
+    /// True when the name was typed by the user rather than chosen from the verified catalog.
+    public var isUserCreatedName: Bool { catalogRef?.hasPrefix("custom:") ?? false }
 }
 
 public enum FrequencyType: String, Codable, Sendable, CaseIterable {

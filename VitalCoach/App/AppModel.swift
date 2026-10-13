@@ -66,6 +66,8 @@ final class AppModel {
     var briefingReminderEnabled: Bool = UserDefaults.standard.object(forKey: "coach.briefingReminder") as? Bool ?? true {
         didSet { UserDefaults.standard.set(briefingReminderEnabled, forKey: "coach.briefingReminder") }
     }
+    /// Smart Routine Entry search (verified catalog + this user's custom names, on-device only).
+    private(set) var substanceSearch: SubstanceAutocompleteService?
     private var repository: Repository?
     private var syncEngine: SyncEngine?
     private var syncTask: Task<Void, Never>?
@@ -91,6 +93,14 @@ final class AppModel {
     }
 
     var calendar: Calendar { Calendar.current }
+
+    /// Custom substance names live in a per-user JSON file next to the record store (not synced).
+    static func customSubstancesURL(_ userId: UUID) -> URL {
+        let base = (try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true))
+            ?? FileManager.default.temporaryDirectory
+        return base.appendingPathComponent("VitalCoach", isDirectory: true)
+            .appendingPathComponent("custom-substances-\(userId.uuidString.lowercased()).json")
+    }
     var today: LocalDate { LocalDate(Date(), calendar: calendar) }
 
     // MARK: Session lifecycle
@@ -128,6 +138,7 @@ final class AppModel {
         isLocalOnly = localOnly
         let repo = Repository(userId: userId, store: store)
         repository = repo
+        substanceSearch = SubstanceAutocompleteService(customStore: FileCustomSubstanceStore(url: Self.customSubstancesURL(userId)))
         if !localOnly, let auth, let backend {
             syncEngine = SyncEngine(userId: userId, store: store,
                                     remote: SupabaseRemoteStore(config: backend, transport: URLSessionTransport(), auth: auth))
@@ -155,6 +166,7 @@ final class AppModel {
         notifications.removeAll()
         if wipeLocalData {
             try? await store.wipe(userId: userId)
+            try? FileManager.default.removeItem(at: Self.customSubstancesURL(userId))
             health.resetAnchors(user: userId)
             defaults.removeObject(forKey: onboardingKey(userId))
         }
@@ -177,6 +189,7 @@ final class AppModel {
         health.stopObserving()
         notifications.removeAll()
         try? await store.wipe(userId: userId)
+        try? FileManager.default.removeItem(at: Self.customSubstancesURL(userId))
         health.resetAnchors(user: userId)
         defaults.removeObject(forKey: onboardingKey(userId))
         defaults.removeObject(forKey: "localOnlyUserId")
@@ -187,7 +200,7 @@ final class AppModel {
 
     private func resetSessionState() {
         syncTask?.cancel()
-        repository = nil; syncEngine = nil; userId = nil; isLocalOnly = false
+        repository = nil; syncEngine = nil; userId = nil; isLocalOnly = false; substanceSearch = nil
         coach = nil; briefing = nil; briefingMessage = nil
         data = UserData(); syncStatus = SyncStatus(); onboarding = OnboardingState()
         phase = .signedOut

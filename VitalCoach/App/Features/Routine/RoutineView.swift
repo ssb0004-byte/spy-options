@@ -57,7 +57,14 @@ struct SubstanceRow: View {
     var body: some View {
         let regimen = RoutinePlanner.currentRegimen(for: substance.id, regimens: model.data.regimens, on: model.today)
         VStack(alignment: .leading, spacing: 2) {
-            Text(substance.name).font(.body.weight(.medium))
+            HStack(spacing: 6) {
+                Text(substance.name).font(.body.weight(.medium))
+                if substance.isUserCreatedName {
+                    Text("User-created").font(.caption2.weight(.medium)).foregroundStyle(VitalColors.caution)
+                        .padding(.horizontal, 6).padding(.vertical, 1)
+                        .background(VitalColors.caution.opacity(0.12), in: Capsule())
+                }
+            }
             if let r = regimen {
                 Text("\(r.dose.formatted) · \(r.route.displayName) · \(ScheduleText.describe(r.schedule))")
                     .font(.caption).foregroundStyle(.secondary)
@@ -92,6 +99,9 @@ struct RegimenDraft {
     var amountText = ""
     var unit: DoseUnit = .milligram
     var route: AdministrationRoute = .oral
+    /// False until the user picks a route when the catalog has no single typical route
+    /// (Smart Routine Entry never assumes injection, or any route, for them).
+    var routeChosen = true
     var frequency: FrequencyType = .daily
     var intervalDays = 2
     var weekdays: Set<Int> = [2, 4, 6]
@@ -132,6 +142,7 @@ struct RegimenDraft {
 
     var validationMessage: String? {
         if amount == nil { return "Enter the dose exactly as prescribed or labelled (e.g. 0.25 or 1/2)." }
+        if !routeChosen { return "Choose how you take it (route)." }
         do { try schedule.validate() } catch {
             switch error as? RegimenSchedule.ValidationError {
             case .noTimes: return "Add at least one time."
@@ -147,6 +158,17 @@ struct RegimenDraft {
 
 struct RegimenFormSection: View {
     @Binding var draft: RegimenDraft
+    /// Routes the catalog lists for this product; shown first. Empty → all routes in order.
+    var typicalRoutes: [AdministrationRoute] = []
+
+    private var routeOptions: [AdministrationRoute] {
+        typicalRoutes + AdministrationRoute.allCases.filter { !typicalRoutes.contains($0) }
+    }
+
+    private var routeSelection: Binding<AdministrationRoute?> {
+        Binding(get: { draft.routeChosen ? draft.route : nil },
+                set: { if let r = $0 { draft.route = r; draft.routeChosen = true } })
+    }
 
     var body: some View {
         Section {
@@ -157,9 +179,11 @@ struct RegimenFormSection: View {
                 }
                 .labelsHidden()
             }
-            Picker("Route", selection: $draft.route) {
-                ForEach(AdministrationRoute.allCases) { Text($0.displayName).tag($0) }
+            Picker("Route", selection: routeSelection) {
+                if !draft.routeChosen { Text("Choose…").tag(AdministrationRoute?.none) }
+                ForEach(routeOptions) { Text($0.displayName).tag(Optional($0)) }
             }
+            .accessibilityIdentifier("routine.route")
         } header: {
             Text("Dose")
         } footer: {
@@ -218,71 +242,5 @@ struct WeekdayPicker: View {
                 .accessibilityAddTraits(on ? [.isSelected] : [])
             }
         }
-    }
-}
-
-struct AddSubstanceView: View {
-    @Environment(AppModel.self) var model
-    @Environment(\.dismiss) var dismiss
-
-    @State var name = ""
-    @State var category: SubstanceCategory = .vitaminMineral
-    @State var formulation = ""
-    @State var indication = ""
-    @State var isPrescribed = false
-    @State var status: SubstanceStatus = .active
-    @State var draft = RegimenDraft()
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    TextField("Name (e.g. Vitamin D3)", text: $name)
-                    Picker("Type", selection: $category) {
-                        ForEach(SubstanceCategory.allCases) { Text($0.displayName).tag($0) }
-                    }
-                    TextField("Formulation / strength on label (optional)", text: $formulation)
-                    TextField("Why you take it (optional)", text: $indication)
-                    Toggle("Prescribed by a clinician", isOn: $isPrescribed)
-                    Picker("Status", selection: $status) {
-                        ForEach([SubstanceStatus.active, .planned, .paused], id: \.self) { Text($0.displayName).tag($0) }
-                    }
-                } footer: {
-                    Text("Phase 1 supports manual entry. Search, label scanning and conversational entry arrive in later updates.")
-                }
-                RegimenFormSection(draft: $draft)
-                if category.changesRequireClinician {
-                    Section {
-                        NoticeBanner(style: .info, text: "VitalCoach records what you and your clinician decided. It doesn't recommend doses or schedules for prescription, hormonal, peptide or compounded products.")
-                    }
-                }
-                if let msg = draft.validationMessage, !draft.amountText.isEmpty {
-                    Section { Text(msg).foregroundStyle(.red) }
-                }
-            }
-            .navigationTitle("Add to routine")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { Task { await save() } }
-                        .disabled(name.nilIfBlank == nil || draft.validationMessage != nil)
-                }
-            }
-        }
-    }
-
-    private func save() async {
-        guard let userId = model.userId, let amount = draft.amount, let trimmed = name.nilIfBlank else { return }
-        let cal = Calendar.current
-        let substance = UserSubstance(userId: userId, name: String(trimmed.prefix(200)), category: category,
-                                      formulation: formulation.nilIfBlank, indication: indication.nilIfBlank,
-                                      status: status, isPrescribed: isPrescribed || category == .prescription)
-        let regimen = SubstanceRegimen(userId: userId, userSubstanceId: substance.id, dose: DoseQuantity(amount: amount, unit: draft.unit),
-                                       route: draft.route, schedule: draft.schedule, startDate: LocalDate(draft.startDate, calendar: cal),
-                                       endDate: draft.hasEndDate ? LocalDate(draft.endDate, calendar: cal) : nil,
-                                       remindersEnabled: draft.reminders)
-        await model.addSubstance(substance, regimen: regimen)
-        dismiss()
     }
 }
