@@ -67,6 +67,10 @@ public struct SubstanceSuggestion: Sendable, Hashable, Identifiable {
     /// so the row can say "Glucophage → Metformin".
     public var matchedAlias: String?
 
+    public init(source: Source, matchedAlias: String? = nil) {
+        self.source = source; self.matchedAlias = matchedAlias
+    }
+
     public var id: String {
         switch source {
         case .verified(let e): "catalog:\(e.id)"

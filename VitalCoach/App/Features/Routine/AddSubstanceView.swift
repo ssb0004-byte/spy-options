@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import VitalCore
 
 /// The seven categories offered in step 1 of Smart Routine Entry.
