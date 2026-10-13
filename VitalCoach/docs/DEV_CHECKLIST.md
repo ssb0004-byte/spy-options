@@ -44,6 +44,23 @@ Verify on device after deploy:
 - [ ] Turning AI consent off makes the coach refuse.
 - [ ] Deleting the account removes coach data (check `coach_messages` in Supabase).
 
+## Phase 3, Smart Routine Entry and redesign: verify on device
+- [ ] Routine → Add:
+  - Peptide "tes" → Tesamorelin
+  - Prescription "met" → Metformin, Metoprolol
+  - "Glucophage" → Metformin
+- [ ] Add a custom substance and relaunch the app: it's still listed, marked "User-created"
+- [ ] Testosterone cypionate requires choosing a route; Metformin pre-selects Oral; no dose is ever pre-filled
+- [ ] Coach → Research → look up "BPC-157":
+  - an evidence level is shown with its explanation
+  - citations open PubMed
+  - no dosing appears
+- [ ] Look up "BPC-157" with the question "I can't put weight on my knee" → triage message only, no card
+- [ ] Follow a topic; reopen the app later → an alert notification appears only for new reviews, trials or label changes
+- [ ] Light and dark mode on every tab; the icon follows dark and tinted Home Screen styles
+- [ ] Largest Dynamic Type size: Home cards wrap, nothing truncates important values
+- [ ] VoiceOver: dose status, evidence levels and metric cards read with text, not colour
+
 ## Phase 5 — release
 
 - [ ] Move the app target to Swift 6 language mode (current CI warnings: `#Predicate` key paths are non-Sendable in SwiftData, HealthKit query results are non-Sendable, observer closure 'sending')
