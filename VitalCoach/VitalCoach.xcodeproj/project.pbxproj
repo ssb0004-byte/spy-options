@@ -38,6 +38,7 @@
 		C64D4B1BA38CE4D524EA9A1E /* CheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A98F83A26C9A9E93DA3236 /* CheckInView.swift */; };
 		CAE02AFB57CC95C4CE53BE20 /* CoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B851BDC553135DF6682EBC73 /* CoachView.swift */; };
 		CBDF8DBA6AADBD243DC32468 /* AddSubstanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189512646F9D1DDED8BA5664 /* AddSubstanceView.swift */; };
+		CED115692A6BB7BBE258254F /* ResearchViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90C0025DBD95F8BCA706915 /* ResearchViews.swift */; };
 		D1626636BF49C7DDE0AB9A11 /* SwiftDataRecordStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5B9FC0B8BE75FB007B9F02 /* SwiftDataRecordStoreTests.swift */; };
 		DE322349421CD56FAE630BD5 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A336DA8B3C4946602E4C892B /* TrendsView.swift */; };
 		E82E19ECD71116AC810CD37B /* RoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BFBA74ED70B2378D208348 /* RoutineView.swift */; };
@@ -100,6 +101,7 @@
 		F0BFBA74ED70B2378D208348 /* RoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineView.swift; sourceTree = "<group>"; };
 		F53888C0B362D474A59281B7 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
 		F6359E117E849CA7C972C24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F90C0025DBD95F8BCA706915 /* ResearchViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,14 @@
 				9A47B07C7B476412F92E306C /* HomeView.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		16A55A2661858E33C8FDC437 /* Research */ = {
+			isa = PBXGroup;
+			children = (
+				F90C0025DBD95F8BCA706915 /* ResearchViews.swift */,
+			);
+			path = Research;
 			sourceTree = "<group>";
 		};
 		1D0535F3BCE47F3FD6562DE0 /* Services */ = {
@@ -340,6 +350,7 @@
 				0667E17AE21FC9D4F9055246 /* Coach */,
 				12757E7D74E666E7AAA8B535 /* Home */,
 				46F4BD54EEA9D90FC029FDBF /* Onboarding */,
+				16A55A2661858E33C8FDC437 /* Research */,
 				B66BFC76E475CB426F93AD69 /* Routine */,
 				A444DCBE8601A40282C455E6 /* Settings */,
 				4F3E9AFE1B88D0455B1B1DBB /* Trends */,
@@ -458,6 +469,7 @@
 				C40C5243FED1D4B237A42B38 /* NotificationService.swift in Sources */,
 				7670941BBD74328C593AEDDC /* OnboardingView.swift in Sources */,
 				B90B1CFF07924A05FF5E16A0 /* Persistence.swift in Sources */,
+				CED115692A6BB7BBE258254F /* ResearchViews.swift in Sources */,
 				E82E19ECD71116AC810CD37B /* RoutineView.swift in Sources */,
 				BBD41CC17530661DA2260DED /* SettingsView.swift in Sources */,
 				3FF6875D92595A2E85E1F2B5 /* SignInView.swift in Sources */,

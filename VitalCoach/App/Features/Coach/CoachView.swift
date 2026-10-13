@@ -83,6 +83,8 @@ struct CoachHomeView: View {
             }
             .vitalRow()
 
+            ResearchHubSection()
+
             if !proposals.isEmpty {
                 Section("Suggestions waiting for you") {
                     ForEach(proposals) { p in GoalProposalRow(insight: p) { await refresh() } }
@@ -333,6 +335,7 @@ struct ChatView: View {
             }
             .padding()
         }
+        .vitalScreenBackground()
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
@@ -381,7 +384,8 @@ struct MessageBubble: View {
                 Spacer(minLength: 40)
                 Text(message.content)
                     .padding(Theme.Spacing.m)
-                    .background(Theme.accent.opacity(0.18), in: RoundedRectangle(cornerRadius: 16))
+                    .foregroundStyle(VitalColors.textPrimary)
+                    .background(VitalColors.accentMuted, in: RoundedRectangle(cornerRadius: VitalRadii.card, style: .continuous))
                     .textSelection(.enabled)
             }
             .accessibilityLabel("You: \(message.content)")
@@ -394,10 +398,24 @@ struct MessageBubble: View {
                     Text(q).font(.callout.italic()).foregroundStyle(VitalColors.textSecondary)
                 }
                 BasisFooter(basis: message.metadata?.basis, dataPoints: message.metadata?.dataPointsUsed)
+                if let topics = message.metadata?.researchTopics, !topics.isEmpty {
+                    VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                        ForEach(Array(Set(topics)).sorted().prefix(4), id: \.self) { topic in
+                            NavigationLink { InsightCardView(compound: topic, question: nil) } label: {
+                                Label("Open research card: \(topic)", systemImage: "doc.text.magnifyingglass")
+                                    .vitalFont(.secondary)
+                                    .foregroundStyle(VitalColors.accentStrong)
+                                    .frame(minHeight: VitalMetrics.minTouchTarget)
+                            }
+                            .accessibilityIdentifier("coach.researchCard.\(topic)")
+                        }
+                    }
+                }
             }
             .padding(Theme.Spacing.m)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Theme.cardBackground, in: RoundedRectangle(cornerRadius: 16))
+            .background(VitalColors.card, in: RoundedRectangle(cornerRadius: VitalRadii.card, style: .continuous))
+            .overlay { RoundedRectangle(cornerRadius: VitalRadii.card, style: .continuous).strokeBorder(VitalColors.border) }
             .accessibilityElement(children: .combine)
         }
     }

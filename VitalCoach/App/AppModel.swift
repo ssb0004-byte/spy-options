@@ -59,6 +59,9 @@ final class AppModel {
     private let auth: SupabaseAuth?
     /// AI coach API (Phase 2). nil in device-only mode or without a backend.
     private(set) var coach: CoachClient?
+    /// Compound research (Phase 3). Same availability rules as the coach.
+    private(set) var research: ResearchClient?
+    var unseenResearchAlerts = 0
     var briefing: CoachInsight?
     var briefingMessage: String?
     var isLoadingBriefing = false
@@ -143,6 +146,7 @@ final class AppModel {
             syncEngine = SyncEngine(userId: userId, store: store,
                                     remote: SupabaseRemoteStore(config: backend, transport: URLSessionTransport(), auth: auth))
             coach = CoachClient(config: backend, transport: URLSessionTransport(), auth: auth)
+            research = ResearchClient(config: backend, transport: URLSessionTransport(), auth: auth)
         }
         onboarding = loadOnboarding(userId)
         await reload()
@@ -201,7 +205,7 @@ final class AppModel {
     private func resetSessionState() {
         syncTask?.cancel()
         repository = nil; syncEngine = nil; userId = nil; isLocalOnly = false; substanceSearch = nil
-        coach = nil; briefing = nil; briefingMessage = nil
+        coach = nil; research = nil; unseenResearchAlerts = 0; briefing = nil; briefingMessage = nil
         data = UserData(); syncStatus = SyncStatus(); onboarding = OnboardingState()
         phase = .signedOut
     }

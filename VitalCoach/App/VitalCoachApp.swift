@@ -21,6 +21,7 @@ struct VitalCoachApp: App {
                         await model.reload()
                         await model.refreshReminders()
                         model.scheduleSync(after: 0)
+                        await model.checkResearchUpdates()
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in

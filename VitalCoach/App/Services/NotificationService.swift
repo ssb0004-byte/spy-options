@@ -89,6 +89,15 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
         try? await center.add(UNNotificationRequest(identifier: Self.briefingId, content: content, trigger: trigger))
     }
 
+    /// Immediate notification for meaningful new research on a followed topic.
+    func postResearchAlert(id: UUID, title: String, body: String) async {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        try? await center.add(UNNotificationRequest(identifier: "research:\(id.uuidString)", content: content, trigger: nil))
+    }
+
     func removeAll() {
         center.removeAllPendingNotificationRequests()
         center.removeAllDeliveredNotifications()

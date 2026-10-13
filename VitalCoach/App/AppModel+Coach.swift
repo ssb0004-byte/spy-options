@@ -56,4 +56,23 @@ extension AppModel {
     func dismissInsight(_ insight: CoachInsight) async {
         try? await coach?.setInsightStatus(insight.id, "dismissed")
     }
+
+    // MARK: Research alerts
+
+    /// Asks the server whether followed compounds/topics have meaningful new evidence (it rate-
+    /// limits itself per topic) and posts one local notification per new alert. Notified ids are
+    /// remembered so an alert is never announced twice.
+    func checkResearchUpdates() async {
+        guard coachAvailability == .ready, let research, let userId else { return }
+        guard let response = try? await research.checkUpdates() else { return }
+        let key = "research.notified.\(userId.uuidString)"
+        let notified = Set((UserDefaults.standard.stringArray(forKey: key) ?? []).compactMap(UUID.init(uuidString:)))
+        let fresh = ResearchAlertNotifier.toNotify(response.alerts, alreadyNotified: notified)
+        for alert in fresh {
+            await notifications.postResearchAlert(id: alert.id, title: alert.notificationTitle, body: alert.notificationBody)
+        }
+        let all = notified.union(fresh.map(\.id)).map(\.uuidString)
+        UserDefaults.standard.set(Array(all.suffix(500)), forKey: key)
+        if let unseen = try? await research.alerts(unseenOnly: true) { unseenResearchAlerts = unseen.count }
+    }
 }
